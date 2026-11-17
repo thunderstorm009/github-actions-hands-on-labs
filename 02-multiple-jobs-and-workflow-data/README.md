@@ -34,12 +34,16 @@ flowchart LR
 ## Prepare and run
 
 Copy the files in this lab to your practice repository under `.github/workflows/`. From the practice repository root, run `git status`, then `git add .github/workflows`, `git commit -m "Add jobs and matrix workflows"`, `git push`. In Actions, open **Multiple jobs and workflow data**. Inspect the graph: `parallel-check` and `prepare` have no dependency and can run concurrently; `report` waits for both. Then open **Python matrix** and compare Python versions.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/fd80ef74-6b22-48e2-b813-858e08f925bd" />
+
 
 ### Workflow walkthrough
 
 `prepare` writes a step output to `$GITHUB_OUTPUT`, maps it as a job output, writes a file and uploads it as `lab-result`. `report` declares `needs`, downloads the artifact and reads the file; job boundaries mean it cannot just read `prepare`'s filesystem. Its summary is written to `$GITHUB_STEP_SUMMARY`. `if: always()` runs even after earlier failure; `failure()` is shown as an example but in this simple report job no failing prior step is expected. `matrix-build.yml` creates three independent variants, and `timeout-minutes` caps each. A failure in a needed job normally skips dependent jobs; use `if: always()` carefully when you need a diagnostic report.
 
 **Expected output (illustrative):** report log prints `Created by prepare`; summary shows `Hello from prepare`; matrix logs print selected Python version and `matrix test passed`. Exact scheduling order varies. A green job graph indicates success. If artifact download fails, verify names and dependency; if `needs` output is empty, verify step `id`, output key and mapping.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/17c8b00a-7ac8-44fb-bec0-be7718fcf28d" />
+
 
 
 ## Visual guide
