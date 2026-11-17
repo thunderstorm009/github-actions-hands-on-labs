@@ -44,7 +44,7 @@ The lab files are nested in this course repository, so GitHub will not execute t
 
 On GitHub, choose **New repository**, name it **docker-nginx-actions-lab**, choose Public if you want anyone to pull the published image without logging in, and create it empty. Leave README initialization unchecked so your first push has no unrelated files.
 
-![Placeholder: create practice repository](images/screenshots/PLACEHOLDER-01-github-repository.svg)
+<img width="963" height="190" alt="image" src="https://github.com/user-attachments/assets/3d05bc30-c87e-4433-92ae-0c067207de69" />
 
 *Capture card only, not a GitHub screenshot. Capture the real repository creation page after completing this step; see the [screenshot guide](images/screenshots/README.md).*
 
@@ -68,7 +68,9 @@ Replace username and identity values. Git identity identifies commits; it is not
 
 **Example output:** Git prints a version. Clone reports it created the folder. For an empty repository, status reports a branch with no commits yet; that is expected. The remote should point to your practice repository. Docker info must include a Server section; if the daemon is unavailable, start Docker Desktop or the Linux Docker service and retry.
 
-![Placeholder: clone the repository](images/screenshots/PLACEHOLDER-02-clone-repository.svg)
+![Placeholder: clone the repository]
+<img width="970" height="174" alt="image" src="https://github.com/user-attachments/assets/55520795-21a0-4e52-bc0e-810ca8d55d79" />
+
 
 *Capture card only. Capture your terminal after a real clone; paths and usernames can be redacted.*
 
@@ -115,7 +117,8 @@ mkdir -p website .github/workflows
 New-Item -ItemType Directory -Force website, .github/workflows | Out-Null
 ~~~
 
-![Placeholder: create project structure](images/screenshots/PLACEHOLDER-03-project-structure.svg)
+![Placeholder: create project structure](<img width="950" height="171" alt="image" src="https://github.com/user-attachments/assets/82fd4eab-d180-48bf-a4ec-b0684f572ed6" />
+)
 
 *Capture card only. Capture the actual file tree in your IDE or terminal after creating the folders.*
 
@@ -166,7 +169,8 @@ New-Item -ItemType Directory -Force website, .github/workflows | Out-Null
 
 The marker gives automation an exact assertion. A generic NGINX welcome page will not pass the test. NGINX serves this file from the document root configured in nginx.conf.
 
-![Placeholder: edit the HTML page](images/screenshots/PLACEHOLDER-04-edit-index-html.svg)
+![Placeholder: edit the HTML page](<img width="957" height="184" alt="image" src="https://github.com/user-attachments/assets/03113ac7-7417-4aff-9a7c-921cdfff1f0f" />
+)
 
 *Capture card only. Capture the real editor showing the marker and heading; this does not depict an editor.*
 
@@ -215,7 +219,8 @@ The Dockerfile copies this file to /etc/nginx/conf.d/default.conf, the location 
 
 *The diagram maps the exact directives to the request path and Dockerfile copy destinations.*
 
-![Placeholder: edit nginx.conf](images/screenshots/PLACEHOLDER-05-edit-nginx-config.svg)
+![Placeholder: edit nginx.conf](<img width="916" height="171" alt="image" src="https://github.com/user-attachments/assets/b457a1ad-a0fa-4c65-bfd7-b3a039b88dad" />
+)
 
 *Capture card only. Capture the real configuration file with directives visible.*
 
@@ -269,7 +274,8 @@ README.md
 
 This prevents Git metadata, workflows, visual assets, docs, and local environment files from being sent to the Docker builder. Never put secrets into the Dockerfile or image.
 
-![Placeholder: write the Dockerfile](images/screenshots/PLACEHOLDER-06-write-dockerfile.svg)
+![Placeholder: write the Dockerfile](<img width="934" height="173" alt="image" src="https://github.com/user-attachments/assets/fbaf006b-0c8b-41ca-800b-53a58345ecfa" />
+)
 
 The [preserved annotated Dockerfile illustration](images/diagrams/step-dockerfile-anatomy.svg) shows the build instructions and ignore-file purpose. It was authored for an earlier NGINX tag; the current complete Dockerfile above is authoritative.
 
@@ -297,7 +303,8 @@ The [Docker image architecture diagram](images/diagrams/docker-architecture.svg)
 
 *Preserved original illustration: Dockerfile and context build a reusable image, which can then start a container.*
 
-![Placeholder: build the Docker image](images/screenshots/PLACEHOLDER-07-docker-build.svg)
+![Placeholder: build the Docker image](<img width="925" height="174" alt="image" src="https://github.com/user-attachments/assets/2602cf97-fdb5-46bd-91e0-07ad836ec97a" />
+)
 
 *Capture card only. Capture the actual build command and successful terminal output.*
 
@@ -319,15 +326,12 @@ The [preserved port mapping image](images/diagrams/port-mapping.svg) gives anoth
 
 *The browser connects to your computer's port 8000. Docker forwards that request to port 80 inside the container.*
 
-![Placeholder: run the container](images/screenshots/PLACEHOLDER-08-run-container.svg)
+![Placeholder: run the container]
 
-*Capture card only. Capture the real docker run result or the corresponding docker ps row.*
 
 Open **http://localhost:8000** in a browser. The page should show “Docker + NGINX” and the unique marker.
 
-![Placeholder: view the local NGINX website](images/screenshots/PLACEHOLDER-09-browser-page.svg)
 
-*Capture card only. Capture the actual browser response from your local container.*
 
 Verify with curl:
 
@@ -351,9 +355,7 @@ docker inspect lab-nginx
 
 **Example output:** the page response includes NGINX_DOCKER_HUB_LAB_READY; the health request prints healthy; docker ps shows an Up container and a port similar to 127.0.0.1:8000->80/tcp. Logs may include the request access record. Inspect is detailed JSON.
 
-![Placeholder: inspect Docker status and logs](images/screenshots/PLACEHOLDER-10-container-logs-status.svg)
 
-*Capture card only. Capture genuine terminal output after making a request.*
 
 The preserved [container inspection and cleanup illustration](images/diagrams/step-container-inspect-cleanup.svg) shows the status/log/remove sequence.
 
@@ -385,9 +387,7 @@ The [runner/Docker-engine diagram](images/diagrams/runner-docker-engine.svg) and
 
 Copy the complete [CI workflow](.github/workflows/docker-nginx.yml) to the same path in your practice repository. Important settings include contents: read, timeout-minutes, the bounded retry loop, failure diagnostics, and cleanup with always(). The current workflow uses actions/checkout v7; check its [official releases](https://github.com/actions/checkout/releases) when maintaining the course.
 
-![Placeholder: create the Actions workflow files](images/screenshots/PLACEHOLDER-11-workflow-files.svg)
 
-*Capture card only. Capture the actual YAML in your IDE at the practice repository's root .github/workflows path.*
 
 Commit the site and CI file:
 
@@ -403,9 +403,7 @@ If your branch already tracks origin/main, plain git push is enough. The first p
 
 After pushing, open the practice repo **Actions → Docker NGINX CI → newest run**. Expand the job and inspect Build, Verify, diagnostics if needed, and Cleanup. A successful marker grep and health assertion are the success signals.
 
-![Placeholder: inspect a genuine CI run](images/screenshots/PLACEHOLDER-14-actions-ci-run.svg)
 
-*Capture card only. Capture the Actions list, event type, status, and actual run graph.*
 
 ![Placeholder: inspect workflow step logs](images/screenshots/PLACEHOLDER-15-actions-step-logs.svg)
 
@@ -419,7 +417,6 @@ A failed smoke test prints Docker status, logs, and inspect output before cleanu
 
 Sign in to [Docker Hub](https://hub.docker.com/), create a repository named **mynginx**, and choose Public if you want unauthenticated pulls in the verification section. Private repositories require Docker Hub authentication before pulling.
 
-![Placeholder: create a Docker Hub repository](images/screenshots/PLACEHOLDER-13-dockerhub-repository.svg)
 
 *Capture card only. Capture the real repository page/name; never include the token creation screen.*
 
@@ -440,9 +437,7 @@ Never put token values into source, terminal commands, Docker build arguments, s
 
 *The access token flows from a GitHub Actions secret into the login action. The credential field itself must remain private; use the screenshot prompt below to capture only the secret names if evidence is needed.*
 
-![Placeholder: configure GitHub repository secrets](images/screenshots/PLACEHOLDER-12-configure-secrets.svg)
 
-*Capture card only. Show secret names, never values. Prefer omitting this capture from a public repository if any account details remain visible.*
 
 ## 10. Publish a tested image to Docker Hub
 
@@ -467,9 +462,7 @@ YOUR_DOCKERHUB_USERNAME/mynginx:<full-commit-sha>
 
 The latest tag is convenient but moves whenever a later main commit publishes. A commit-SHA tag makes it easier to identify the source revision. Registry tags can be changed; production deployment references can use the image digest for stronger identity.
 
-![Placeholder: publish image from a trusted main run](images/screenshots/PLACEHOLDER-16-dockerhub-publish.svg)
 
-*Capture card only. Capture the real main-branch run after push success; redact private account information.*
 
 **Example behavior:** the Actions run shows build, HTTP assertions, cleanup, Docker Hub login, and two push commands. Never infer success from workflow YAML alone.
 
@@ -479,9 +472,7 @@ Open Docker Hub → **mynginx → Tags**. After a real successful publish, both 
 
 The publish diagram above shows both tags leaving the same tested image. The tag list capture below must come from your actual Docker Hub repository.
 
-![Placeholder: verify Docker Hub tags](images/screenshots/PLACEHOLDER-17-dockerhub-tags.svg)
 
-*Capture card only. Capture actual tag rows after a successful push; no tag screenshot is included as execution evidence.*
 
 Pull and run the public image. Replace the placeholder username with your Docker Hub username.
 
@@ -501,9 +492,7 @@ docker run --detach --publish 8001:80 --name published-nginx YOUR_DOCKERHUB_USER
 
 Browse to **http://localhost:8001** and confirm the unique marker. A Docker Hub repository is remote storage; docker pull copies an image to your computer; docker run creates a container from that local image.
 
-![Placeholder: pull and run the published image](images/screenshots/PLACEHOLDER-18-pull-and-run.svg)
 
-*Capture card only. Capture your actual pull/run output and browser page after verifying the tag.*
 
 Cleanup:
 
@@ -539,9 +528,7 @@ The [preserved container-inspection illustration](images/diagrams/step-container
 | Publish job is skipped | Manual run must use main; the branch guard blocks other refs intentionally. |
 | Local browser cannot see runner container | Expected: runner localhost is isolated. curl in the job is the verification. |
 
-![Placeholder: capture real troubleshooting and repair](images/screenshots/PLACEHOLDER-19-troubleshooting.svg)
 
-*Capture card only. Capture a real failed run and a distinct successful repair run; do not fabricate either result.*
 
 ## 13. Security, cleanup, and practice
 
