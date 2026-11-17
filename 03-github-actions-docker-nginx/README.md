@@ -27,10 +27,16 @@ flowchart LR
 ## Implementation
 
 From your practice repository, copy this lab's `Dockerfile`, `.dockerignore`, `website/index.html` and workflow. The Dockerfile uses a maintained NGINX Alpine image, copies only website assets and declares HTTP port. `docker build -t actions-nginx:local .` builds locally. `docker run --detach --name lab-nginx -p 8080:80 actions-nginx:local` starts it. Visit `http://localhost:8080`; verify with `curl http://localhost:8080` (PowerShell: `Invoke-WebRequest http://localhost:8080`). Inspect using `docker ps` and `docker logs lab-nginx`. Stop/remove with `docker rm -f lab-nginx`; remove image using `docker image rm actions-nginx:local`.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2e6963b0-9068-473c-a061-7beb58d436b0" />
+
 
 The workflow builds `actions-nginx:ci` in GitHub's runner, starts a container and retries HTTP using curl. Its port is exposed only within the runner's environment; **it is not automatically available in your local browser**. The `always()` cleanup runs even if the HTTP check fails. Push workflow and inspect Actions logs; a page response and green job mean success. This sample intentionally does not publish to a registry. Optional GHCR publishing needs package write permission and authenticated login with `GITHUB_TOKEN`; see official docs before adding.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/28b69aba-ada1-4b60-9595-4a04c91488ad" />
+
 
 **Example output:** `docker build` ends with `Successfully tagged actions-nginx:ci` (builder wording can differ); curl prints HTML. If port 8080 is taken locally, change host port to 8081. If Docker daemon is unavailable, start Docker Desktop. Image layers can be cached by the daemon; Buildx and `cache` actions are useful in larger builds, but this basic smoke test avoids cache complexity. Image scanning is an important follow-on; don't treat a successful build as a security audit.
+![Uploading image.png…]()
+
 
 
 ## Visual guide
