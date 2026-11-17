@@ -1,83 +1,143 @@
 # Lab 05 — Building a CRUD Application CI/CD Pipeline
 
-Build a small Flask JSON API backed by SQLite, test all CRUD operations, lint it and build a container in CI. This lab joins application structure, dependencies, API, database, tests, caching and Docker. It does not deploy publicly or require paid hosting.
+Build a Flask JSON API that creates, reads, updates and deletes SQLite rows. Pytest exercises the API through Flask's test client, Ruff checks style, and Docker packages the app. GitHub Actions runs checks on pushes and pull requests; it does not deploy publicly.
 
-## Estimated time
+## Estimated time and outcomes
 
 | Activity | Duration |
 |---|---:|
-| Architecture/concepts | 45 min |
-| Python environment setup | 30 min |
-| App and database implementation | 90 min |
-| Tests and local verification | 45 min |
+| Architecture and Python setup | 45 min |
+| Application/database implementation | 90 min |
+| Tests and local API verification | 45 min |
 | Docker and workflow | 45 min |
-| Debugging/exercises | 45 min |
+| Debugging and exercises | 45 min |
 | **Total** | **4 h 40 min** |
 
-Need Python 3.12+, Git, VS Code, Docker, and previous labs. App endpoints: `POST /items` create, `GET /items` read, `PUT /items/<id>` update, `DELETE /items/<id>` delete.
+Beginners may need extra time. Need Python 3.12+, Git, an editor, terminal, Docker and prior labs. An IDE is optional: any editor that can open a project folder and a terminal works. VS Code is the walkthrough's primary editor.
 
-```mermaid
-flowchart LR
- push[Push or PR] --> install[Install dependencies]
- install --> tests[Pytest CRUD tests]
- tests --> lint[Ruff]
- lint --> image[Build Docker image]
+## Step 1 — Create the lab project
+
+Copy this module's files into a practice repository while preserving the top-level folder `05-crud-application-cicd/`. The workflow's `working-directory` and dependency cache paths expect this structure. Open that folder in your IDE/project editor. The diagram is editor-independent: each box is an actual checked-in file.
+
+![Flask project structure](images/diagrams/step-flask-tree.svg)
+
+*Project map: routes use the database helper, tests use the app factory, and Docker packages `app/`.*
+
+## Step 2 — Create an isolated Python environment
+
+**Working directory:** `05-crud-application-cicd/`. Use the terminal pane in your IDE or a system terminal opened at this folder.
+
+macOS/Linux:
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python --version
 ```
 
-## Project and run locally
+Windows PowerShell:
 
-Copy this module into a separate practice repository preserving its folders. From `05-crud-application-cicd` (the app folder), create an environment: macOS/Linux `python3 -m venv .venv && source .venv/bin/activate`; PowerShell `py -m venv .venv; .venv\\Scripts\\Activate.ps1`. Install with `python -m pip install -r requirements.txt`. Run `python -m pytest tests -q`, then `python -m ruff check app tests`. Expected illustrative output: `2 passed`; Ruff exits with no findings. Start `python -m app.run`; open `http://localhost:5000/items` (initially `[]`). Test with `curl -X POST http://localhost:5000/items -H 'Content-Type: application/json' -d '{"name":"Notebook"}'` (PowerShell use `Invoke-RestMethod -Method Post -Uri http://localhost:5000/items -ContentType 'application/json' -Body '{"name":"Notebook"}'`).
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python --version
+```
 
-The application factory configures SQLite and registers routes; parameterized SQL prevents treating submitted names as SQL code. Tests use an in-memory database so runs are isolated. Docker copies dependencies and application only; `.dockerignore` excludes local state and secrets. For local container: `docker build -t crud-api:local .`, then `docker run --rm -p 5000:5000 crud-api:local`. The mounted host port serves the API. Remove container with Ctrl+C (without `--rm`) or let `--rm` clean it up.
+![Virtual environment and install commands](images/diagrams/step-python-setup.svg)
 
-Copy `.github/workflows/ci-cd.yml` to practice repository root. The workflow sets read-only contents permission, installs Python, caches pip dependencies, runs tests/lint and builds image. Its paths assume the lab folder remains named `05-crud-application-cicd`; if copied contents to repository root, remove that prefix. Push and inspect Actions. A green run shows all checks and image build completed. No deployment or image publishing occurs. GitHub Environments and approvals are useful for later deployment, but configure them only when you have a real target and safe credentials.
+*Command illustration; the exact prompt prefix and installed versions vary by system.*
 
-## Troubleshooting, practice and security
+If PowerShell blocks activation, use the Python executable directly: `.venv\Scripts\python.exe -m pip install -r requirements.txt`. Do not change machine-wide execution policy for this course. `requirements.txt` pins Flask, pytest and Ruff; `.venv` stays local and is ignored by Git.
 
-SQLite errors: verify writable current directory and no stale database file. Import errors: run from this lab directory with venv active. Docker failure: start daemon. Workflow path errors: preserve module path or remove the prefix consistently. Tests: guided add missing-item 404 test; invalid empty name; add route docstrings. Independent add pagination; return structured health endpoint. Questions: why app factory? why in-memory test db? what does cache key use? why tests before image? why avoid auto deployment? Debugging: change expected status 201 to 200, inspect and repair. Integration: add test for update/delete nonexistent IDs and enforce green CI. Solutions: verify route returns 404; `requirements.txt` drives pip cache. Protect secrets; never include `.env` or database credentials in image. Dummy app has no auth, so do not expose it as a production API.
+## Step 3 — Understand app factory, routes and database
 
-Further reading: [Flask](https://flask.palletsprojects.com/), [pytest](https://docs.pytest.org/), [SQLite](https://sqlite.org/docs.html), [Python setup action](https://github.com/actions/setup-python), [GitHub Environments](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment). Next: optional [Lab 06](../06-github-actions-security/README.md).
+Open `app/__init__.py`, `app/db.py` and `app/routes.py` in your editor. `create_app` configures SQLite and registers a blueprint. The database helper opens a connection per Flask application context and closes it at teardown. Routes validate the JSON `name` field and use SQL placeholders (`?`) so user content remains data, not SQL syntax.
 
-## Screenshot index
+![Route and parameterized database flow](images/diagrams/step-routes-database.svg)
 
-Capture VS Code app/tree, local API response, test output, Docker page and CI graph/log. No screenshot here asserts execution not performed in this authoring environment.
+*This illustrates the actual CRUD route and SQLite flow. Tests use a temporary SQLite file per test fixture so app-context cleanup does not erase the database during a test.*
 
-## Visual guide
+Endpoints: `POST /items` returns 201 and an object; `GET /items` returns a list; `PUT /items/<id>` updates or returns 404; `DELETE /items/<id>` returns 204 or 404. Invalid/missing names return 400.
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+## Step 4 — Run tests and lint locally
 
-### Image Publishing Flow
+From the lab folder with the environment active:
 
-![image publishing flow](images/diagrams/image-publishing-flow.svg)
+```sh
+python -m pytest tests -q
+python -m ruff check app tests
+```
 
-### Api Request Response
+![Pytest and Ruff commands with verified local output](images/diagrams/step-pytest-ruff.svg)
 
-![api request response](images/diagrams/api-request-response.svg)
+*The two-test result and Ruff success were observed locally in this workspace. This is an output illustration recreated from command output, not a terminal screenshot and not a GitHub Actions run.*
 
-### Complete Ci Pipeline
+The pytest fixture creates a testing Flask app and a temporary SQLite database; no public server or production database is involved. If imports fail, check the working directory and environment. If Ruff reports a location, open the named file and line.
 
-![complete ci pipeline](images/diagrams/complete-ci-pipeline.svg)
+## Step 5 — Start the API and verify requests
 
-### Crud Sequence
+Start the development server in one terminal:
 
-![crud sequence](images/diagrams/crud-sequence.svg)
+```sh
+python -m app.run
+```
 
-### Pipeline Outcomes
+Open `http://localhost:5000/items`; the initial response is `[]`. In another terminal, create an item:
 
-![pipeline outcomes](images/diagrams/pipeline-outcomes.svg)
+```sh
+curl -X POST http://localhost:5000/items -H 'Content-Type: application/json' -d '{"name":"Notebook"}'
+curl http://localhost:5000/items
+```
 
-### Client Api Database Flow
+PowerShell alternative:
 
-![client api database flow](images/diagrams/client-api-database-flow.svg)
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:5000/items -ContentType 'application/json' -Body '{"name":"Notebook"}'
+Invoke-RestMethod -Uri http://localhost:5000/items
+```
 
-### Application Architecture
+![Local Flask and API command sequence](images/diagrams/step-local-api-docker.svg)
 
-![application architecture](images/diagrams/application-architecture.svg)
+*Expected response includes an item ID and `Notebook`; IDs vary. Stop Flask with Ctrl+C.*
 
-### Pytest Architecture
+## Step 6 — Build and run the Docker image
 
-![pytest architecture](images/diagrams/pytest-architecture.svg)
+From the lab folder:
 
-### Docker Application Architecture
+```sh
+docker build -t crud-api:local .
+docker run --rm -p 5000:5000 crud-api:local
+```
 
-![docker application architecture](images/diagrams/docker-application-architecture.svg)
+The Dockerfile installs dependencies in a Python slim image, copies only `app/`, and runs Flask on container port 5000. `.dockerignore` excludes the Git folder, virtual environment, database, cache and `.env`. Open or request `http://localhost:5000/items`. The `--rm` option removes the container after Ctrl+C; remove image using `docker image rm crud-api:local`.
+
+## Step 7 — Add and inspect CI
+
+Copy `.github/workflows/ci-cd.yml` from this module to the same relative path in your practice repo. It expects the module folder to remain named `05-crud-application-cicd/`. On push, pull request or manual dispatch it checks out code, sets Python 3.12, caches pip dependencies, installs packages, runs pytest, Ruff and Docker build. Permissions are read-only. No publishing or deployment happens.
+
+![CI pipeline illustration](images/diagrams/step-ci-workflow.svg)
+
+*Workflow path map: test and lint must pass before the Docker build step; image stays on that runner.*
+
+From the course checkout, `git add 05-crud-application-cicd` stages the module; in the learner's practice repository run `git add .`, commit and push. Open **Actions → CRUD CI → newest run → test job** and inspect pytest, Ruff and build steps. A green job means all three completed. Workflow examples are nested course files; GitHub only executes files copied into the practice repo's root `.github/workflows/`.
+
+## Troubleshooting, security and practice
+
+Database error: verify writable folder and check `DATABASE` config. Import error: run from lab directory. Docker daemon error: start Docker Desktop. Workflow cannot find requirements: confirm folder retained or update `working-directory`, cache path and Docker context together. Do not deploy this unauthenticated demo publicly or add real credentials.
+
+Guided: add a 404 test; reject whitespace-only names; add route docstrings. Independent: add a health endpoint; add another field with a migration strategy. Questions: why use an app factory? Why temporary DB in tests? What is SQL parameterization? Why test before packaging? Why does no public deploy reduce risk? Debug: change expected POST code 201 to 200, inspect failure, repair. Integration: verify create/read/update/delete and add green CI. Hints: Flask test client accepts `json=...`; tests use `tmp_path`.
+
+Further reading: [Flask](https://flask.palletsprojects.com/), [pytest](https://docs.pytest.org/), [SQLite](https://sqlite.org/docs.html), [setup-python](https://github.com/actions/setup-python), [GitHub Environments](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment). Next: optional [Lab 06](../06-github-actions-security/README.md).
+
+## Visual coverage checklist
+
+| Stage | Visual type | Status |
+|---|---|---|
+| Files and module relationships | Implementation diagram | Project map above |
+| Environment creation and install | Annotated command illustration | Commands and OS-specific variants above |
+| App factory, routes and SQLite | Data-flow diagram | Route/database map above |
+| Pytest and Ruff verification | Output illustration | Based on actual local command result, explicitly not a screenshot |
+| API, Docker and CI | Command/workflow diagrams | Beside corresponding steps |
+| Genuine editor/API/Docker/Actions evidence | Screenshot capture cards | [`images/screenshots/README.md`](images/screenshots/README.md) |

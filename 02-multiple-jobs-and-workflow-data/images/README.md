@@ -1,51 +1,19 @@
-# Visual index
+# Lab visual asset index
 
-## Original technical diagrams
+Diagrams are embedded beside the relevant implementation instructions in [`../README.md`](../README.md). These are conceptual or annotated illustrations, never screenshots of execution.
 
-### Job Dependency Graph
+| Diagram | Topic |
+|---|---|
+| [Artifact Lifecycle](diagrams/artifact-lifecycle.svg) | Original technical/implementation illustration |
+| [Job Dependency Graph](diagrams/job-dependency-graph.svg) | Original technical/implementation illustration |
+| [Matrix Strategy](diagrams/matrix-strategy.svg) | Original technical/implementation illustration |
+| [Multiple Job Architecture](diagrams/multiple-job-architecture.svg) | Original technical/implementation illustration |
+| [Parallel Jobs](diagrams/parallel-jobs.svg) | Original technical/implementation illustration |
+| [Sequential Needs](diagrams/sequential-needs.svg) | Original technical/implementation illustration |
+| [Step Artifact Summary](diagrams/step-artifact-summary.svg) | Original technical/implementation illustration |
+| [Step Matrix Status](diagrams/step-matrix-status.svg) | Original technical/implementation illustration |
+| [Step Output Flow](diagrams/step-output-flow.svg) | Original technical/implementation illustration |
+| [Step Workflow Jobs](diagrams/step-workflow-jobs.svg) | Original technical/implementation illustration |
+| [Workflow Output Passing](diagrams/workflow-output-passing.svg) | Original technical/implementation illustration |
 
-![job dependency graph diagram](diagrams/job-dependency-graph.svg)
-
-[Open editable SVG source](diagrams/job-dependency-graph.svg).
-
-### Sequential Needs
-
-![sequential needs diagram](diagrams/sequential-needs.svg)
-
-[Open editable SVG source](diagrams/sequential-needs.svg).
-
-### Workflow Output Passing
-
-![workflow output passing diagram](diagrams/workflow-output-passing.svg)
-
-[Open editable SVG source](diagrams/workflow-output-passing.svg).
-
-### Matrix Strategy
-
-![matrix strategy diagram](diagrams/matrix-strategy.svg)
-
-[Open editable SVG source](diagrams/matrix-strategy.svg).
-
-### Parallel Jobs
-
-![parallel jobs diagram](diagrams/parallel-jobs.svg)
-
-[Open editable SVG source](diagrams/parallel-jobs.svg).
-
-### Multiple Job Architecture
-
-![multiple job architecture diagram](diagrams/multiple-job-architecture.svg)
-
-[Open editable SVG source](diagrams/multiple-job-architecture.svg).
-
-### Artifact Lifecycle
-
-![artifact lifecycle diagram](diagrams/artifact-lifecycle.svg)
-
-[Open editable SVG source](diagrams/artifact-lifecycle.svg).
-
-## Genuine screenshots
-
-Place real captures from your own practice execution in `screenshots/`. The authoring checkout does not include real workstation or GitHub UI captures, so none are presented as execution evidence.
-
-[Screenshot capture guide](screenshots/README.md).
+Genuine evidence capture instructions are in [`screenshots/README.md`](screenshots/README.md).

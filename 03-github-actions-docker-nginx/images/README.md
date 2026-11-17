@@ -1,57 +1,20 @@
-# Visual index
+# Lab visual asset index
 
-## Original technical diagrams
+Diagrams are embedded beside the relevant implementation instructions in [`../README.md`](../README.md). These are conceptual or annotated illustrations, never screenshots of execution.
 
-### Github Actions Docker Ci
+| Diagram | Topic |
+|---|---|
+| [Browser Nginx Request Flow](diagrams/browser-nginx-request-flow.svg) | Original technical/implementation illustration |
+| [Container Networking](diagrams/container-networking.svg) | Original technical/implementation illustration |
+| [Docker Architecture](diagrams/docker-architecture.svg) | Original technical/implementation illustration |
+| [Docker Build Run Lifecycle](diagrams/docker-build-run-lifecycle.svg) | Original technical/implementation illustration |
+| [Ghcr Publishing Flow](diagrams/ghcr-publishing-flow.svg) | Original technical/implementation illustration |
+| [Github Actions Docker Ci](diagrams/github-actions-docker-ci.svg) | Original technical/implementation illustration |
+| [Port Mapping](diagrams/port-mapping.svg) | Original technical/implementation illustration |
+| [Runner Docker Engine](diagrams/runner-docker-engine.svg) | Original technical/implementation illustration |
+| [Step Container Inspect Cleanup](diagrams/step-container-inspect-cleanup.svg) | Original technical/implementation illustration |
+| [Step Dockerfile Anatomy](diagrams/step-dockerfile-anatomy.svg) | Original technical/implementation illustration |
+| [Step Local Docker Commands](diagrams/step-local-docker-commands.svg) | Original technical/implementation illustration |
+| [Step Runner Http Check](diagrams/step-runner-http-check.svg) | Original technical/implementation illustration |
 
-![github actions docker ci diagram](diagrams/github-actions-docker-ci.svg)
-
-[Open editable SVG source](diagrams/github-actions-docker-ci.svg).
-
-### Port Mapping
-
-![port mapping diagram](diagrams/port-mapping.svg)
-
-[Open editable SVG source](diagrams/port-mapping.svg).
-
-### Runner Docker Engine
-
-![runner docker engine diagram](diagrams/runner-docker-engine.svg)
-
-[Open editable SVG source](diagrams/runner-docker-engine.svg).
-
-### Browser Nginx Request Flow
-
-![browser nginx request flow diagram](diagrams/browser-nginx-request-flow.svg)
-
-[Open editable SVG source](diagrams/browser-nginx-request-flow.svg).
-
-### Docker Build Run Lifecycle
-
-![docker build run lifecycle diagram](diagrams/docker-build-run-lifecycle.svg)
-
-[Open editable SVG source](diagrams/docker-build-run-lifecycle.svg).
-
-### Container Networking
-
-![container networking diagram](diagrams/container-networking.svg)
-
-[Open editable SVG source](diagrams/container-networking.svg).
-
-### Docker Architecture
-
-![docker architecture diagram](diagrams/docker-architecture.svg)
-
-[Open editable SVG source](diagrams/docker-architecture.svg).
-
-### Ghcr Publishing Flow
-
-![ghcr publishing flow diagram](diagrams/ghcr-publishing-flow.svg)
-
-[Open editable SVG source](diagrams/ghcr-publishing-flow.svg).
-
-## Genuine screenshots
-
-Place real captures from your own practice execution in `screenshots/`. The authoring checkout does not include real workstation or GitHub UI captures, so none are presented as execution evidence.
-
-[Screenshot capture guide](screenshots/README.md).
+Genuine evidence capture instructions are in [`screenshots/README.md`](screenshots/README.md).

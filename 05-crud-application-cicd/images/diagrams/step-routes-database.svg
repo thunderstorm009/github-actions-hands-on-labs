@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1072" height="478" viewBox="0 0 1072 478">
+<rect width="100%" height="100%" rx="20" fill="#f5f8fc"/>
+<text x="34" y="42" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#142b4a">Step · Route to parameterized SQL</text>
+<text x="34" y="68" font-family="Arial,sans-serif" font-size="13" fill="#52657d">Annotated learning illustration · not a screenshot</text>
+<rect x="34" y="92" width="320" height="146" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
+<text x="50" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">HTTP route</text>
+<text x="50" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">validate JSON name</text>
+<path d="M356 165.0 L372 165.0" stroke="#54708f" stroke-width="2"/>
+<rect x="376" y="92" width="320" height="146" rx="14" fill="#e7f7f2" stroke="#b7c8dc"/>
+<text x="392" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Parameterized query</text>
+<text x="392" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">INSERT INTO items(name) VALUES (?)</text>
+<path d="M698 165.0 L714 165.0" stroke="#54708f" stroke-width="2"/>
+<rect x="718" y="92" width="320" height="146" rx="14" fill="#fff2dc" stroke="#b7c8dc"/>
+<text x="734" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">SQLite</text>
+<text x="734" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">table initialized by create_app</text>
+<rect x="34" y="260" width="320" height="146" rx="14" fill="#f0eaff" stroke="#b7c8dc"/>
+<text x="50" y="288" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Commit</text>
+<text x="50" y="315" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">persist change</text>
+<path d="M356 333.0 L372 333.0" stroke="#54708f" stroke-width="2"/>
+<rect x="376" y="260" width="320" height="146" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
+<text x="392" y="288" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Response</text>
+<text x="392" y="315" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">201 + JSON item; errors use 400 / 404</text>
+</svg>

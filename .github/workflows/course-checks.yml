@@ -1,0 +1,42 @@
+name: Course checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  examples:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 05-crud-application-cicd
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: 05-crud-application-cicd/requirements.txt
+      - name: Install CRUD lab dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run CRUD tests
+        run: python -m pytest tests -q
+      - name: Check CRUD style
+        run: python -m ruff check app tests
+      - name: Validate diagrams and local links
+        run: |
+          cd ..
+          python - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree
+          import re
+          for svg in Path('.').rglob('*.svg'):
+              ElementTree.parse(svg)
+          for page in Path('.').rglob('*.md'):
+              for target in re.findall(r'\]\(([^)#]+)(?:#[^)]*)?\)', page.read_text()):
+                  if '://' not in target and not target.startswith('mailto:'):
+                      assert (page.parent / target).exists(), f'{page}: missing {target}'
+          print('SVG and local Markdown link checks passed')
+          PY

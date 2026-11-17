@@ -1,80 +1,84 @@
 # Lab 03 — GitHub Actions with Docker and NGINX
 
-Build a static site image, run NGINX locally and in CI, and verify HTTP without publishing an image. Docker packages a filesystem and runtime configuration as an image; a container is a running instance. Build context `.` supplies files to `docker build`; port mapping `8080:80` maps host port 8080 to container port 80. NGINX serves the static page.
+Build a small static site image, run it locally in NGINX, then repeat the build and an HTTP smoke test on GitHub's runner. The workflow does not publish the image or expose a port on your computer.
 
-## Estimated time
+## Estimated time and outcomes
 
 | Activity | Duration |
 |---|---:|
-| Concepts | 35 min |
+| Docker and networking concepts | 35 min |
 | Docker/VS Code setup | 30 min |
-| Implementation | 75 min |
-| Verification | 25 min |
+| Website and container implementation | 75 min |
+| Local and Actions verification | 25 min |
 | Debugging | 20 min |
 | Exercises | 25 min |
 | **Total** | **3 h 30 min** |
 
-Need Git, VS Code, Docker Desktop or Docker Engine and Lab 01 knowledge. Verify `docker --version` and `docker info`.
+Beginners may need extra time. Need Git, VS Code, Docker Desktop/Engine and Lab 01. Verify `docker --version` and `docker info` before continuing.
 
-```mermaid
-flowchart LR
- source[Website + Dockerfile] --> build[docker build on runner]
- build --> run[NGINX container]
- run --> curl[HTTP smoke test on runner]
- curl --> logs[Actions logs]
+## Step 1 — Understand the image and request path
+
+A Dockerfile describes how to assemble an image. The image is an immutable template; a container is a running instance. The build context is the set of local files available to Docker during build, filtered by `.dockerignore`.
+
+![Dockerfile instructions and build context](images/diagrams/step-dockerfile-anatomy.svg)
+
+*Annotated illustration of the actual Dockerfile and `.dockerignore`; not an editor screenshot.*
+
+The project files are [`Dockerfile`](Dockerfile), [`.dockerignore`](.dockerignore), [`website/index.html`](website/index.html), and [`.github/workflows/docker-nginx.yml`](.github/workflows/docker-nginx.yml). Keep these at the practice repository root in those paths.
+
+## Step 2 — Build and run locally
+
+**Where:** VS Code terminal. **Working directory:** practice repository root containing the Dockerfile.
+
+```sh
+docker build -t actions-nginx:local .
+docker run --detach --name lab-nginx --publish 8080:80 actions-nginx:local
 ```
 
-## Implementation
+![Local Docker command sequence](images/diagrams/step-local-docker-commands.svg)
 
-From your practice repository, copy this lab's `Dockerfile`, `.dockerignore`, `website/index.html` and workflow. The Dockerfile uses a maintained NGINX Alpine image, copies only website assets and declares HTTP port. `docker build -t actions-nginx:local .` builds locally. `docker run --detach --name lab-nginx -p 8080:80 actions-nginx:local` starts it. Visit `http://localhost:8080`; verify with `curl http://localhost:8080` (PowerShell: `Invoke-WebRequest http://localhost:8080`). Inspect using `docker ps` and `docker logs lab-nginx`. Stop/remove with `docker rm -f lab-nginx`; remove image using `docker image rm actions-nginx:local`.
+*Command illustration: host port `8080` maps to NGINX container port `80`.*
 
-The workflow builds `actions-nginx:ci` in GitHub's runner, starts a container and retries HTTP using curl. Its port is exposed only within the runner's environment; **it is not automatically available in your local browser**. The `always()` cleanup runs even if the HTTP check fails. Push workflow and inspect Actions logs; a page response and green job mean success. This sample intentionally does not publish to a registry. Optional GHCR publishing needs package write permission and authenticated login with `GITHUB_TOKEN`; see official docs before adding.
+**Example output:** build output ends with an image ID/tag; run returns a long container ID. Exact text varies by Docker version. Open `http://localhost:8080` in your browser. Verify in another terminal with `curl http://localhost:8080`; on PowerShell use `Invoke-WebRequest http://localhost:8080`. The returned HTML includes “Hello from NGINX in Docker.”
 
-**Example output:** `docker build` ends with `Successfully tagged actions-nginx:ci` (builder wording can differ); curl prints HTML. If port 8080 is taken locally, change host port to 8081. If Docker daemon is unavailable, start Docker Desktop. Image layers can be cached by the daemon; Buildx and `cache` actions are useful in larger builds, but this basic smoke test avoids cache complexity. Image scanning is an important follow-on; don't treat a successful build as a security audit.
+Inspect with `docker ps` and `docker logs lab-nginx`. To clean up run `docker rm --force lab-nginx`, then `docker image rm actions-nginx:local`.
 
+![Container inspection and cleanup](images/diagrams/step-container-inspect-cleanup.svg)
 
-## Visual guide
+*Expected local checks; capture actual browser, `docker ps`, and logs using the screenshot guide.*
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+## Step 3 — Run the same smoke test in Actions
 
-### Github Actions Docker Ci
+Copy the complete workflow file into the practice repository at `.github/workflows/docker-nginx.yml`. It checks out source, builds `actions-nginx:ci`, starts NGINX, retries `curl --fail` up to ten times, and removes the container from an `if: always()` cleanup step. The runner's Docker engine and loopback network belong to the GitHub-hosted VM.
 
-![github actions docker ci](images/diagrams/github-actions-docker-ci.svg)
+![GitHub runner and HTTP smoke-test steps](images/diagrams/step-runner-http-check.svg)
 
-### Port Mapping
+*The curl request runs inside the GitHub runner. Its `localhost:8080` is not your laptop's browser address.*
 
-![port mapping](images/diagrams/port-mapping.svg)
+Commit and push from the practice repo root:
 
-### Runner Docker Engine
+```sh
+git add Dockerfile .dockerignore website/index.html .github/workflows/docker-nginx.yml
+git commit -m "Add Docker NGINX smoke test"
+git push
+```
 
-![runner docker engine](images/diagrams/runner-docker-engine.svg)
+Open the practice repository's **Actions → Docker NGINX → newest run → build-and-smoke-test**. A successful HTTP step prints the HTML response; cleanup runs even after an earlier failure. The green check confirms this workflow run passed. This repository's examples are nested course material and do not run automatically until copied to a repository root.
 
-### Browser Nginx Request Flow
+## Troubleshooting, security and exercises
 
-![browser nginx request flow](images/diagrams/browser-nginx-request-flow.svg)
+Port busy: map `8081:80` and browse `localhost:8081`. Docker unavailable: start Docker Desktop and retry `docker info`. Build cannot find website: verify context is `.` and `website/index.html` exists. HTTP fails: inspect container logs before cleanup, verify mapping and retry delay. A green image build is not a vulnerability scan. Never pass credentials through Docker build args or copy `.env` into an image. `.dockerignore` excludes Git metadata, workflows and docs from context.
 
-### Docker Build Run Lifecycle
+Guided: edit page title; change host port; add a page. Independent: tag by commit SHA; add HTTP body assertion. Questions: image vs container? What is build context? What do `-p 8080:80` ports mean? Why cannot a local browser reach runner localhost? Why `always()` cleanup? Debug: rename `website/` and inspect build error, then repair. Integration: build, start, assert unique page text and cleanup.
 
-![docker build run lifecycle](images/diagrams/docker-build-run-lifecycle.svg)
+Optional GHCR publishing requires `packages: write`, login and package policy; the basic lab needs no registry. Read [Docker docs](https://docs.docker.com/), [NGINX image](https://hub.docker.com/_/nginx), [GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Next: [Lab 04](../04-self-hosted-github-actions-runner/README.md).
 
-### Container Networking
+## Visual coverage checklist
 
-![container networking](images/diagrams/container-networking.svg)
-
-### Docker Architecture
-
-![docker architecture](images/diagrams/docker-architecture.svg)
-
-### Ghcr Publishing Flow
-
-![ghcr publishing flow](images/diagrams/ghcr-publishing-flow.svg)
-
-## Exercises, security and cleanup
-
-Guided: change page title; map port 8081; add an NGINX health-check request. Independent: build with a commit-derived tag; add a second page. Questions: image vs container? What does build context mean? Why port mapping? Why can't local browser reach runner container? What does cleanup do? Debugging: rename copied website folder then read build failure. Integration: CI builds, starts, checks unique page content and always cleans up. Hints: `docker build -t actions-nginx:$tag .`; `grep` or `curl | grep`. Do not put credentials in image layers or context; `.dockerignore` excludes repo metadata. Clean up container/image after local work.
-
-Further reading: [Docker docs](https://docs.docker.com/), [NGINX image](https://hub.docker.com/_/nginx), [GitHub container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Next: [Lab 04](../04-self-hosted-github-actions-runner/README.md).
-
-## Screenshot index
-
-See `images/README.md` for genuine capture suggestions; no run is claimed here.
+| Stage | Aid | Verification evidence |
+|---|---|---|
+| Dockerfile/context | Annotated implementation diagram | [`step-dockerfile-anatomy.svg`](images/diagrams/step-dockerfile-anatomy.svg) |
+| Build/run and port map | Command illustration | [`step-local-docker-commands.svg`](images/diagrams/step-local-docker-commands.svg) |
+| Browser, curl, logs, cleanup | Expected-output illustration | [`step-container-inspect-cleanup.svg`](images/diagrams/step-container-inspect-cleanup.svg) |
+| Runner smoke test | Workflow sequence illustration | [`step-runner-http-check.svg`](images/diagrams/step-runner-http-check.svg) |
+| Genuine Docker/browser/Actions captures | Screenshot capture cards | [`images/screenshots/README.md`](images/screenshots/README.md) |

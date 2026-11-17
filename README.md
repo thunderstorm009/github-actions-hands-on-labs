@@ -29,7 +29,7 @@ Start with a push-triggered workflow; then orchestrate jobs and artifacts, test 
 
 ## Prerequisites
 
-A computer, internet access, Git, VS Code and a GitHub account. Docker is required for Lab 03 and the container part of Lab 05. No paid cloud account is needed. See [setup from zero](docs/START-HERE.md), [VS Code setup](docs/VS-CODE-SETUP.md), and the [roadmap](docs/LEARNING-ROADMAP.md).
+A computer, internet access, Git, any IDE/editor with file and terminal support (VS Code is the pictured guide), and a GitHub account. Docker is required for Lab 03 and the container part of Lab 05. No paid cloud account is needed. See [setup from zero](docs/START-HERE.md), [editor and terminal setup](docs/VS-CODE-SETUP.md), and the [roadmap](docs/LEARNING-ROADMAP.md).
 
 ## Progress
 

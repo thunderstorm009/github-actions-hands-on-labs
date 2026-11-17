@@ -1,62 +1,64 @@
 # Optional Lab 06 — GitHub Actions Security, Secrets and Permissions
 
-Configure workflows to do only what they need. `GITHUB_TOKEN` is a short-lived, repository-scoped credential; actions may access it through context even when it is not visibly passed. Permissions at workflow/job level narrow access. Secrets are encrypted at rest but become available to steps that reference them; masking is not a defense against intentional transformations or exfiltration.
+Practice safe workflow configuration using read-only access and a fake secret. Learn why fork code is untrusted, why `pull_request_target` needs special care, and how OIDC can replace long-lived cloud credentials.
 
-## Estimated time
+## Estimated time and prerequisites
 
 | Activity | Duration |
 |---|---:|
 | Threat concepts | 35 min |
-| Configure workflow/settings | 30 min |
+| Workflow and settings setup | 30 min |
 | Exercises | 45 min |
-| Inspect and debug | 25 min |
-| Review and cleanup | 15 min |
+| Inspect/debug | 25 min |
+| Cleanup and review | 15 min |
 | **Total** | **2 h 30 min** |
 
-Prerequisite: Lab 01 and admin access to a practice repo. Copy the example workflow. Observe that it declares `contents: read`, scopes job permissions and checks a dummy secret only for presence. Never echo its value. To test, set a fake value as repository secret `DEMO_VALUE`; remove it after. The workflow must not print the value.
+Beginners may need extra time. Need Lab 01 and admin rights on a disposable practice repository. Never enter real production credentials.
 
-Topics to investigate: repository and environment secrets, environment protection rules/approvals, fork PR restrictions, untrusted expressions/script injection, action SHA pinning, dependency updates and OIDC short-lived cloud identity. `pull_request_target` runs with base-repository trust; never combine it with checking out and executing untrusted fork code. Compare the deliberately dangerous shape in GitHub's security guidance rather than running it.
+## Step 1 — Inspect permissions and token boundary
 
-Exercises: narrow permission; configure a dummy secret; add a protected environment without deploying. Challenges: audit every action and justify permissions; replace a vulnerable string interpolation in shell with an environment variable. Questions: why least privilege? What does masking fail to guarantee? Why are fork PRs different? What is action SHA pinning? What problem does OIDC solve? Debug exercise: remove required contents read and inspect checkout error, then restore. Integration: safe read-only PR workflow and gated deployment design using fake credentials. Hints: quote shell variables, don't expose values, keep secret access out of PR tests.
+Copy [`least-privilege.yml`](.github/workflows/least-privilege.yml) to your practice repo's root `.github/workflows/`. This example grants `contents: read`; checkout needs to read source, while this workflow has no write purpose. When specifying any permissions, unspecified scopes become `none`. Actions may access `github.token` even when the workflow does not explicitly pass it, so workflow permissions still matter.
 
-Security: never use production secrets for this exercise. `pull_request_target` risks, script injection and self-hosted runner host access can turn untrusted input into credential theft. Remove dummy secret after practice. Further reading: [security hardening](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), [token permissions](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token), [secure pull_request_target](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target), [OIDC](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect). Continue to [Lab 07](../07-reusable-workflows-and-releases/README.md).
+![Read-only token permission illustration](images/diagrams/step-permissions-code.svg)
 
-## Screenshot index
+*The permission box shows the example scope, not an Actions UI capture.*
 
-Use genuine, redacted screenshots for permissions, dummy secret presence check and environment approval settings. Never show the secret value.
+## Step 2 — Use a dummy secret without logging it
 
-## Visual guide
+In practice repo **Settings → Secrets and variables → Actions → New repository secret**, add key `DEMO_VALUE` with a fake value such as `not-a-real-credential`. The sample injects it only into one step and prints a presence message. It never prints the value. After pushing and inspecting the step log, delete the dummy secret from Settings.
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+![Dummy secret handling lifecycle](images/diagrams/step-dummy-secret.svg)
 
-### Secure Insecure Patterns
+*Do not include secret values in terminal captures, screenshots, artifacts or debug logs. Masking is not a guarantee against transformations or exfiltration.*
 
-![secure insecure patterns](images/diagrams/secure-insecure-patterns.svg)
+## Step 3 — Review pull request trust and safer patterns
 
-### Least Privilege Comparison
+A fork pull request is untrusted code. Run ordinary CI on `pull_request` with minimal permissions and no secrets. Do not combine `pull_request_target` with checking out and executing fork content: that event runs in the base repository trust context. Pass untrusted values to shell through environment variables and quote variables rather than interpolating attacker-controlled expressions into scripts.
 
-![least privilege comparison](images/diagrams/least-privilege-comparison.svg)
+![Pull request trust boundary](images/diagrams/step-pr-trust-boundary.svg)
 
-### Oidc Authentication
+*Safe read-only fork CI and privileged base-repository events belong on different trust paths.*
 
-![oidc authentication](images/diagrams/oidc-authentication.svg)
+## Step 4 — Explore environments and OIDC
 
-### Secret Lifecycle
+An environment can store environment-scoped secrets and apply protection rules/approval gates before a deployment job proceeds. Do not configure an actual deployment for this lab. OIDC lets a job request a short-lived identity token; a cloud trust policy checks repository/ref/workflow claims before granting temporary access. This avoids storing a long-lived cloud key, but policy must still be narrow.
 
-![secret lifecycle](images/diagrams/secret-lifecycle.svg)
+Other topics: review third-party actions, pin sensitive dependencies to a full commit SHA, track updates, and keep token scopes minimal. Read the security guide before broadening permissions.
 
-### Token Permission Boundary
+## Verify, practice and cleanup
 
-![token permission boundary](images/diagrams/token-permission-boundary.svg)
+Push the workflow and inspect **Actions → Least privilege example → job → Use a dummy secret**. With no secret, it prints `No dummy secret configured`; with the fake value, it prints only `Dummy secret is configured`. Both are expected. Remove `DEMO_VALUE` in Settings after the exercise.
 
-### Pull Request Security
+Guided: narrow permissions in a job; add a dummy secret; set up a protected environment without deployment. Independent: audit each action reference; replace unsafe shell interpolation with a quoted environment variable. Questions: why least privilege? What can masking miss? Why are fork PRs different? Why pin action SHAs? What does OIDC replace? Debug: remove `contents: read`, observe checkout fail, then restore. Integration: safe read-only PR checks and a gated deployment design with no real credentials.
 
-![pull request security](images/diagrams/pull-request-security.svg)
+Further reading: [security hardening](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), [GITHUB_TOKEN](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token), [secure pull_request_target](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target), [OIDC](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect).
 
-### Trusted Untrusted Workflows
+## Visual coverage checklist
 
-![trusted untrusted workflows](images/diagrams/trusted-untrusted-workflows.svg)
-
-### Security Architecture
-
-![security architecture](images/diagrams/security-architecture.svg)
+| Stage | Aid | Location |
+|---|---|---|
+| Permissions and token boundary | Annotated workflow illustration | Above Step 1 |
+| Secret injection/removal | Lifecycle diagram | Above Step 2 |
+| PR trust boundary | Security flow diagram | Above Step 3 |
+| OIDC exchange | Conceptual diagram | [`oidc-authentication.svg`](images/diagrams/oidc-authentication.svg) |
+| Genuine Settings/run captures | Redacted screenshot instructions | [`images/screenshots/README.md`](images/screenshots/README.md) |

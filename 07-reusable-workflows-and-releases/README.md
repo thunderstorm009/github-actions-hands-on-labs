@@ -1,62 +1,76 @@
 # Optional Lab 07 — Reusable Workflows, Custom Actions and Release Automation
 
-Reuse a whole workflow through `workflow_call`, expose inputs/outputs, package a composite action and understand release triggers. This reduces duplicate CI configuration and gives teams a consistent reusable building block.
+Reuse a workflow through `workflow_call`, define a composite action, pass values between jobs and understand tag-driven release automation. The examples do not publish a release until you explicitly add and authorize a release job.
 
-## Estimated time
+## Estimated time and outcomes
 
 | Activity | Duration |
 |---|---:|
 | Concepts | 35 min |
-| Implementation | 70 min |
-| Tag/release practice | 35 min |
+| Workflow and action implementation | 70 min |
+| Tag practice | 35 min |
 | Verification/debugging | 25 min |
 | Exercises | 20 min |
 | **Total** | **3 h 5 min** |
 
-Prerequisite: Lab 02. Copy the workflows into a practice repo root. `reusable.yml` declares `workflow_call`, a required string input and output; caller passes input and consumes returned output after `needs`. Composite action metadata lives under `actions/greeting/action.yml`; `runs.using: composite` and shell per step are required. To use it, add a workflow step `uses: ./actions/greeting` with `with: name: ...`.
+Beginners may need longer. Need Lab 02 and Git/GitHub practice repository. At completion you can explain callable workflows, action inputs/outputs, composite metadata and version tags.
 
-The caller example prints `Hello, Actions learner`. Inspect **Actions** graph and output. A local reusable workflow path is relative to repository root. Fix metadata YAML indentation if VS Code flags it; action metadata is not itself a workflow. Release automation uses tags such as `v1.2.3` (semantic version MAJOR.MINOR.PATCH); a `push.tags` trigger can build a release artifact. Publishing a GitHub Release with `GITHUB_TOKEN` requires `contents: write`, which this read-only example deliberately does not request. Add that permission only for a release job and review tag trust. Scheduled workflows use POSIX cron in UTC and can run late; manual dispatch is useful for controlled practice.
+## Step 1 — Create the reusable workflow contract
 
-Exercises: add optional greeting style input; make a reusable test workflow; add a tag trigger that prints the tag. Independent: create a zip artifact on tag; version a composite action. Questions: reusable workflow vs composite action? How does output cross jobs? Why not write token broadly? What is semantic version? Why use tags? Debug: rename output key and repair caller. Integration: on tag, test then upload artifact (no public deployment). Hints: `workflow_call`, `needs.<job>.outputs`, `actions/upload-artifact`. Avoid creating releases from untrusted tags or leaking secrets.
+Copy [`reusable.yml`](.github/workflows/reusable.yml) and [`call-reusable.yml`](.github/workflows/call-reusable.yml) into your practice repository root `.github/workflows/`. The called workflow declares `workflow_call`, a required string input and a workflow output. The caller job uses the local workflow path and supplies `with.recipient`.
 
-Further reading: [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows), [composite actions](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action), [releases](https://docs.github.com/en/repositories/releasing-projects-on-github), [workflow events and cron](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows). This completes the optional path.
+![workflow_call caller and output flow](images/diagrams/step-workflow-call-code.svg)
 
-## Screenshot index
+*Contract illustration follows the checked-in caller and reusable workflow.*
 
-Capture caller/callee job graph, input/output logs, composite action directory and release artifact page from a real practice run; no fabricated evidence is included.
+The reusable workflow maps the step's `$GITHUB_OUTPUT` value to a job output, then to the callable workflow output. Caller jobs read returned values through `needs.call.outputs.message`.
 
-## Visual guide
+## Step 2 — Build and use the composite action
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+The action lives in `actions/greeting/action.yml`; source path matters. Composite actions group steps in one `action.yml`, and each `run` step declares its shell. Copy `actions/greeting/` into the same relative path in your practice repo. Add this step to a workflow:
 
-### Custom Action Execution
+```yaml
+- uses: ./actions/greeting
+  id: greeting
+  with:
+    name: Actions learner
+- run: echo "${{ steps.greeting.outputs.greeting }}"
+```
 
-![custom action execution](images/diagrams/custom-action-execution.svg)
+![Composite action metadata map](images/diagrams/step-composite-metadata.svg)
 
-### Release Automation Pipeline
+*The action output is set through `$GITHUB_OUTPUT`; local paths resolve from repository root.*
 
-![release automation pipeline](images/diagrams/release-automation-pipeline.svg)
+## Step 3 — Verify the workflow call
 
-### Reusable Cicd Architecture
+Commit and push from the practice repository. In GitHub select **Actions → Call reusable workflow → newest run**. The graph shows the called job followed by `display`; the log prints `Hello, Actions learner`. If the workflow is not found, verify both files are at the root `.github/workflows/`. If output is empty, check output names through step, job and workflow layers.
 
-![reusable cicd architecture](images/diagrams/reusable-cicd-architecture.svg)
+## Step 4 — Practice tags and release artifacts safely
 
-### Versioning Tagging Lifecycle
+Semantic version tags use `vMAJOR.MINOR.PATCH`, such as `v1.2.3`. From the practice repo, after tests pass:
 
-![versioning tagging lifecycle](images/diagrams/versioning-tagging-lifecycle.svg)
+```sh
+git tag v1.2.3
+git push origin v1.2.3
+```
 
-### Caller Reusable Relationship
+A release workflow can trigger on `push.tags` and build/upload an artifact. A GitHub Release job needs `contents: write`; grant it only to that job, gate it on successful checks, and trust only reviewed tags. The current samples deliberately remain read-only and do not create/publish a release. Scheduled workflows use UTC cron and may start later than the exact scheduled minute; manual dispatch is useful for controlled tests.
 
-![caller reusable relationship](images/diagrams/caller-reusable-relationship.svg)
+![Tag and release lifecycle](images/diagrams/step-release-tagging.svg)
 
-### Inputs Outputs Dataflow
+*Release flow illustration; it is not evidence that a release was published.*
 
-![inputs outputs dataflow](images/diagrams/inputs-outputs-dataflow.svg)
+## Exercises and further reading
 
-### Reusable Workflow Architecture
+Guided: add an optional greeting input; add an output; create a manual tag-print workflow. Independent: zip an artifact on tag; version a composite action. Questions: reusable workflow vs composite action? Where do outputs cross job boundaries? Why grant `contents: write` only at release time? What is semantic versioning? Why are tags security-sensitive? Debug: rename output key then repair. Integration: tag triggers tests then an artifact upload, with no public deployment.
 
-![reusable workflow architecture](images/diagrams/reusable-workflow-architecture.svg)
+Further reading: [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows), [composite actions](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action), [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github), [workflow events and cron](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows).
 
-### Composite Action Structure
+## Visual coverage checklist
 
-![composite action structure](images/diagrams/composite-action-structure.svg)
+| Stage | Aid | Location |
+|---|---|---|
+| Caller/callee, `workflow_call`, outputs | Annotated flow illustration | Above Step 1 |
+| Composite action metadata | File structure illustration | Above Step 2 |
+| Workflow logs and output | Genuine screenshot capture card | [`images/screenshots/README.md`](images/screenshots/README.md) |
+| Tag and release artifact | Lifecycle diagram | Above Step 4; conceptual only |

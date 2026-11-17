@@ -39,6 +39,10 @@ Git, VS Code, GitHub account and internet. Follow [Start Here](../docs/START-HER
 
 **Objective:** make a personal remote to receive your experiment. **Where:** GitHub website, then your computer terminal. Create an empty repository, then clone it. **Command:** `git clone https://github.com/YOUR-USERNAME/github-actions-lab.git` then `cd github-actions-lab`; **Working directory:** the parent folder for the clone. **Expected output:** `Cloning into 'github-actions-lab'...`; exact progress differs. Open the folder in VS Code (**File → Open Folder**), then **Terminal → New Terminal**. Run `git config --global user.name "Your Name"` and `git config --global user.email "you@example.com"`; these configure identity on your computer (choose the email you want on commits). `git config --get user.name` and `git config --get user.email` verify them. To avoid changing global config, run those commands without `--global` inside this practice repository. **Troubleshooting:** ensure the GitHub repository is empty and your account can authenticate. **Next:** create workflow path.
 
+![Annotated practice repository workflow path](images/diagrams/step-project-location.svg)
+
+*Illustration: the workflow must be inside the practice repository root under `.github/workflows/`.*
+
 ### Step 02 — Create the workflow file
 
 **Objective:** put the sample under the required repository path. **Where:** VS Code Explorer; use New Folder twice to create `.github/workflows`, then New File. **File path:** `.github/workflows/basic-checkout.yml` relative to your *practice repository root*. **Content to paste:** copy the complete [`basic-checkout.yml`](.github/workflows/basic-checkout.yml) shown below. The hidden `.github` directory is normal; type the leading dot.
@@ -79,6 +83,14 @@ jobs:
 
 **Code explanation:** `on` selects events; `workflow_dispatch` adds a Run workflow button. `permissions` limits the automatic `GITHUB_TOKEN` to read repository contents. `jobs.inspect` is an ID; `runs-on` chooses the runner. `checkout@v6` downloads the triggering commit into the remote runner workspace (the action's current version is checked against its official release page when this course was prepared; use maintained releases). Each `run` is a shell command. `|` preserves a multiline script. `env` sets a value for one step. `github.ref` is a context; `if` skips the final step outside main. Failed commands generally return nonzero exit codes, failing the step/job.
 
+![Annotated VS Code Explorer creation sequence](images/diagrams/step-vscode-file-creation.svg)
+
+*Illustration: create `.github`, then `workflows`, then the YAML file in Explorer. This is not a VS Code screenshot.*
+
+![Annotated workflow YAML anatomy](images/diagrams/step-yaml-anatomy.svg)
+
+*Illustration: the labeled sections correspond to the complete YAML immediately above.*
+
 ### Step 03 — Commit and push
 
 **Where:** VS Code integrated terminal. **Working directory:** practice repository root (`pwd` or PowerShell `Get-Location`). Execute:
@@ -92,50 +104,43 @@ git push -u origin main
 
 **Example output:** status lists the new file as untracked; commit reports one file changed; push reports `main -> main`. Names and commit IDs vary. If the branch is `master`, rename with `git branch -M main` before pushing. Git identity missing? rerun the config commands from Step 01. **Security:** never put credentials in workflow YAML or print environment variables wholesale.
 
+![Annotated Git command sequence](images/diagrams/step-git-publish.svg)
+
+*Illustration: expected command order; names and Git output IDs vary.*
+
 ### Step 04 — Inspect the run
 
 **Where:** browser, your practice repo → **Actions** → **Basic checkout** → newest run → `Inspect the repository on Ubuntu` → individual step. A push to `main` creates a run; a pull request also creates a run. GitHub's runner runs the commands remotely. Success is a green check and each step marked completed. The file listing and OS/tool versions appear in their logs; timestamps and versions may vary because `ubuntu-latest` moves. **Verification:** use the Actions job graph and compare each step to the YAML. A missing workflow usually means wrong path, extension, branch or no push. Confirm Actions is enabled and that workflow is in the repository's default branch.
 
+![GitHub Actions navigation illustration](images/diagrams/step-actions-inspection.svg)
+
+*Interface map only, not a captured GitHub page. Capture your real run using the checklist below.*
+
 ### Step 05 — Practice a controlled failure
 
 In the practice repo, temporarily change `node --version` to `node --version-invalid`, commit and push. The version step fails and later steps are skipped. Read the first red step's log, restore the command, commit and push again. This demonstrates failure through exit status; don't create a failure in a production workflow.
+
+![Successful and failed workflow paths](images/diagrams/step-run-outcome.svg)
+
+*Expected behavior illustration: inspect the actual first failing step and then the repaired run in your practice repository.*
 
 ## Detailed outputs and screenshots
 
 **Example output** for the version step includes `Runner OS: Linux`, a kernel string, Node/Python/Git version lines and `Hello from the workflow`. These are illustrative and vary by runner image. In Actions, event name and commit SHA identify the trigger and code revision. `images/` includes a screenshot index with explicit placeholders: no real GitHub execution screenshot is supplied in this source checkout, so none is presented as evidence. Capture your own screenshots of Explorer, YAML, terminal, run graph, step logs and failure/success in your practice repository.
 
 
-## Visual guide
+## Visual coverage and screenshot capture
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+The illustrations above are diagrams of the implementation, not editor or execution screenshots. Follow the capture cards in [`images/screenshots/README.md`](images/screenshots/README.md) to save genuine VS Code, terminal, repository, Actions, success and failure captures beside this lab. The current public course repository screenshot is in `images/screenshots/`; it proves repository navigation only.
 
-### Github Actions Architecture
-
-![github actions architecture](images/diagrams/github-actions-architecture.svg)
-
-### Success Failure Flow
-
-![success failure flow](images/diagrams/success-failure-flow.svg)
-
-### Workflow Yaml Structure
-
-![workflow yaml structure](images/diagrams/workflow-yaml-structure.svg)
-
-### Workflow File Location
-
-![workflow file location](images/diagrams/workflow-file-location.svg)
-
-### Workflow Lifecycle
-
-![workflow lifecycle](images/diagrams/workflow-lifecycle.svg)
-
-### Runner Comparison
-
-![runner comparison](images/diagrams/runner-comparison.svg)
-
-### Step Execution Flow
-
-![step execution flow](images/diagrams/step-execution-flow.svg)
+| Step | Learning aid | What it explains |
+|---|---|---|
+| Create practice repo and path | `step-project-location.svg` | Exact nested workflow path |
+| Create file in VS Code | `step-vscode-file-creation.svg` | Explorer actions and filename |
+| Configure workflow | `step-yaml-anatomy.svg` + complete YAML | Trigger, job, runner, steps, condition |
+| Commit and push | `step-git-publish.svg` | Command order and expected branch update |
+| Inspect execution | `step-actions-inspection.svg` | GitHub navigation from run to step log |
+| Debug failure | `step-run-outcome.svg` | Nonzero exit, red step, repair run |
 
 ## Exercises
 

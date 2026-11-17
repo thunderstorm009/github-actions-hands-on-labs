@@ -1,76 +1,82 @@
 # Lab 04 — Self-Hosted GitHub Actions Runner
 
-A self-hosted runner is a machine you operate that connects to GitHub, polls for eligible jobs and executes them. Unlike a fresh hosted VM, it can retain state and access its host network/files. That power creates real risk.
+Register a dedicated VM as a repository runner, target it with labels, dispatch one safe workflow, then stop and remove it. A self-hosted runner executes with access to its machine and network; isolate it and only run trusted code.
 
-## Estimated time
+## Estimated time and outcomes
 
 | Activity | Duration |
 |---|---:|
-| Concepts and security | 35 min |
+| Runner and threat concepts | 35 min |
 | Prepare isolated VM | 30 min |
-| Register and configure | 45 min |
-| Execute and inspect | 25 min |
+| Settings, register and configure | 45 min |
+| Dispatch and inspect | 25 min |
 | Remove and troubleshoot | 25 min |
 | Exercises | 20 min |
 | **Total** | **3 h** |
 
-Prerequisites: Lab 01, repository admin access, a dedicated disposable VM/computer, shell access and internet. Never use a shared workstation for untrusted workflow code.
+Beginners may need additional time. Need Lab 01, repository admin access, internet and a disposable dedicated VM or machine. Do not use a shared host. Choose Linux/macOS/Windows to match your machine and architecture.
 
-```mermaid
-flowchart LR
- GH[GitHub job queue] <--> RA[Runner app on isolated VM]
- RA --> job[Workflow steps execute as host user]
- job --> cleanup[Stop service and remove registration]
-```
+## Architecture and trust boundary
 
-## Procedure
+GitHub schedules work; the runner application maintains an outbound connection and receives matching jobs. Workflow steps execute on the host under the runner service account.
 
-Prepare a dedicated VM and update its OS. On the GitHub website open your *practice repository* → **Settings → Actions → Runners → New self-hosted runner**. Select OS and architecture. Follow the current page's download, checksum, configure and service commands exactly; package versions and commands change, so this lab deliberately does not hardcode a runner tarball or registration token. Keep the short-lived registration token in the terminal prompt only; never commit, paste into workflow, log or screenshot it. Configure labels including `linux` and `x64` (adapt YAML if different).
+![Runner job assignment and host boundary](images/diagrams/control-plane-runner.svg)
 
-Copy `.github/workflows/self-hosted.yml` into your practice repo. It uses `workflow_dispatch`, the labels select a matching runner, and commands print basic host information. In Actions manually start **Self-hosted runner demo**. Verify the runner says **Idle** before dispatch, then **Online** and job completes. The job runs as the runner service account with access permitted to that host.
+*Conceptual architecture; the VM is a security boundary you own and maintain.*
 
-Stop the runner with the service instructions printed by GitHub's setup page. In Settings → Runners, remove it. Then remove the runner directory and credentials/config from the VM according to official cleanup instructions. Confirm it no longer appears in repository Settings.
+## Step 1 — Prepare the VM and open runner settings
 
-## Security and troubleshooting
+Update the dedicated VM, create a non-admin runner account where practical, and ensure it has only the network access it needs. In your practice repository, open **Settings → Actions → Runners → New self-hosted runner**. Choose the VM operating system and architecture from the page.
 
-Never run fork PR code or other untrusted code on a privileged self-hosted runner. Use ephemeral, isolated VMs with minimum network access and no production credentials; patch and monitor them. Registration tokens are temporary but sensitive. Runner labels mismatch or machine offline causes a queued job; check runner status, service logs and exact labels. A job must target `self-hosted` plus labels actually registered. Avoid `pull_request_target` here.
+![GitHub runner settings navigation illustration](images/diagrams/step-runner-settings-navigation.svg)
 
-Exercises: add a safe hostname line; add a custom label and target it; document runner OS version. Challenges: compare same job on hosted runner; build an ephemeral disposable VM lifecycle. Questions: who patches runner? Why is its filesystem sensitive? What causes queued jobs? What is registration token? Why avoid untrusted PRs? Debug: change one label and inspect queue, then restore. Integration: run safe info job, then deregister and verify cleanup. Hints: do not print all environment variables; hostname command is `hostname`.
+*This is a navigation illustration, not a GitHub screenshot. Exact labels may change; follow the current Settings page.*
 
-Further reading: [self-hosted runners](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners), [runner reference](https://docs.github.com/en/actions/reference/runners/self-hosted-runners), [secure use](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions). Next: [Lab 05](../05-crud-application-cicd/README.md).
+The GitHub page shows the current runner package, checksum, configuration and service commands. Follow those commands exactly; do not use old copied versions. Verify package integrity using the checksum instructions shown there.
 
-## Screenshot index
+## Step 2 — Configure labels and start the runner
 
-Capture Settings runner status, setup page with all tokens redacted, workflow run and deregistered runner list. Never save a token-containing screenshot. `images/README.md` is the capture plan.
+Run the setup commands in the VM terminal in the directory you chose for the runner. GitHub generates a short-lived registration token. Paste it only into the interactive configuration prompt. Do not echo, save in workflow files, commit, or include it in screenshots. Keep the default labels and note the actual labels shown by runner setup.
 
-## Visual guide
+![Runner setup and labels](images/diagrams/step-runner-config-labels.svg)
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+*Token is omitted from the illustration. Never capture the token on the live setup page.*
 
-### Job Assignment Sequence
+Install/start the runner service using the commands for your selected OS. Verify repository Settings shows the runner **Online** and **Idle**.
 
-![job assignment sequence](images/diagrams/job-assignment-sequence.svg)
+## Step 3 — Dispatch the workflow
 
-### Runner Registration Lifecycle
+Copy [`self-hosted.yml`](.github/workflows/self-hosted.yml) to the practice repo root at `.github/workflows/self-hosted.yml`. Its `workflow_dispatch` trigger avoids automatically executing code on every unreviewed push. `runs-on: [self-hosted, linux, x64]` requires all those labels; change `linux` or `x64` to labels actually present on your VM.
 
-![runner registration lifecycle](images/diagrams/runner-registration-lifecycle.svg)
+![Service state to a dispatched job](images/diagrams/step-runner-service-job.svg)
 
-### Runner Service Lifecycle
+*All requested labels must match an online runner before GitHub can assign the job.*
 
-![runner service lifecycle](images/diagrams/runner-service-lifecycle.svg)
+On GitHub select **Actions → Self-hosted runner demo → Run workflow**. Open the resulting run, job and step log. Confirm the runner has transitioned from idle to busy and back to idle. The commands report the runner OS and kernel; values differ by VM. Do not echo full environment variables or secrets.
 
-### Hosted Self Hosted Infrastructure
+## Step 4 — Stop, unregister and clean up
 
-![hosted self hosted infrastructure](images/diagrams/hosted-self-hosted-infrastructure.svg)
+Stop the service using the OS-specific command printed in the GitHub setup instructions. In Settings → Actions → Runners, select the runner and remove it. Remove runner files/configuration following current official instructions; reimage the disposable VM if appropriate.
 
-### Runner Label Selection
+![Safe runner removal sequence](images/diagrams/step-runner-remove.svg)
 
-![runner label selection](images/diagrams/runner-label-selection.svg)
+*Success means no runner entry remains and its service is stopped.*
 
-### Control Plane Runner
+## Security, exercises and further reading
 
-![control plane runner](images/diagrams/control-plane-runner.svg)
+Never run fork pull-request code on a privileged self-hosted runner. A compromised job may access host files, credentials and private network resources. Use ephemeral isolated VMs with no production secrets, patch them, monitor them and restrict network access. A queued job usually indicates an offline runner or a label mismatch; compare the workflow selector to registered labels and check service status/logs.
 
-### Trusted Untrusted Boundary
+Exercises: print hostname only; add a custom label; compare with a hosted runner. Questions: who patches this VM? What can a compromised job access? Why require every label? Why use manual dispatch? Why remove registration? Debug: change a label, observe queued state, then restore it. Integration: execute safe system-info workflow then unregister. Hints: do not print all env values; `hostname` is safe for a disposable VM.
 
-![trusted untrusted boundary](images/diagrams/trusted-untrusted-boundary.svg)
+Further reading: [self-hosted runner setup](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners), [runner reference](https://docs.github.com/en/actions/reference/runners/self-hosted-runners), [security hardening](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions). Next: [Lab 05](../05-crud-application-cicd/README.md).
+
+## Visual coverage checklist
+
+| Stage | Aid type | Evidence status |
+|---|---|---|
+| Architecture and host boundary | Concept diagram | Runner architecture above |
+| Settings navigation and platform choice | Interface map illustration | Not a captured screenshot; exact capture guide below |
+| Configure labels and service | Annotated command illustration | No token rendered |
+| Online/idle, assignment and logs | State-flow illustration | Capture real run in practice repo |
+| Stop and unregister | Cleanup illustration | Verify Settings list is empty |
+| Genuine GitHub/terminal screenshots | Capture instructions | [`images/screenshots/README.md`](images/screenshots/README.md) |

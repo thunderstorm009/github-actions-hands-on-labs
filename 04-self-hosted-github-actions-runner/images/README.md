@@ -1,51 +1,19 @@
-# Visual index
+# Lab visual asset index
 
-## Original technical diagrams
+Diagrams are embedded beside the relevant implementation instructions in [`../README.md`](../README.md). These are conceptual or annotated illustrations, never screenshots of execution.
 
-### Job Assignment Sequence
+| Diagram | Topic |
+|---|---|
+| [Control Plane Runner](diagrams/control-plane-runner.svg) | Original technical/implementation illustration |
+| [Hosted Self Hosted Infrastructure](diagrams/hosted-self-hosted-infrastructure.svg) | Original technical/implementation illustration |
+| [Job Assignment Sequence](diagrams/job-assignment-sequence.svg) | Original technical/implementation illustration |
+| [Runner Label Selection](diagrams/runner-label-selection.svg) | Original technical/implementation illustration |
+| [Runner Registration Lifecycle](diagrams/runner-registration-lifecycle.svg) | Original technical/implementation illustration |
+| [Runner Service Lifecycle](diagrams/runner-service-lifecycle.svg) | Original technical/implementation illustration |
+| [Step Runner Config Labels](diagrams/step-runner-config-labels.svg) | Original technical/implementation illustration |
+| [Step Runner Remove](diagrams/step-runner-remove.svg) | Original technical/implementation illustration |
+| [Step Runner Service Job](diagrams/step-runner-service-job.svg) | Original technical/implementation illustration |
+| [Step Runner Settings Navigation](diagrams/step-runner-settings-navigation.svg) | Original technical/implementation illustration |
+| [Trusted Untrusted Boundary](diagrams/trusted-untrusted-boundary.svg) | Original technical/implementation illustration |
 
-![job assignment sequence diagram](diagrams/job-assignment-sequence.svg)
-
-[Open editable SVG source](diagrams/job-assignment-sequence.svg).
-
-### Runner Registration Lifecycle
-
-![runner registration lifecycle diagram](diagrams/runner-registration-lifecycle.svg)
-
-[Open editable SVG source](diagrams/runner-registration-lifecycle.svg).
-
-### Runner Service Lifecycle
-
-![runner service lifecycle diagram](diagrams/runner-service-lifecycle.svg)
-
-[Open editable SVG source](diagrams/runner-service-lifecycle.svg).
-
-### Hosted Self Hosted Infrastructure
-
-![hosted self hosted infrastructure diagram](diagrams/hosted-self-hosted-infrastructure.svg)
-
-[Open editable SVG source](diagrams/hosted-self-hosted-infrastructure.svg).
-
-### Runner Label Selection
-
-![runner label selection diagram](diagrams/runner-label-selection.svg)
-
-[Open editable SVG source](diagrams/runner-label-selection.svg).
-
-### Control Plane Runner
-
-![control plane runner diagram](diagrams/control-plane-runner.svg)
-
-[Open editable SVG source](diagrams/control-plane-runner.svg).
-
-### Trusted Untrusted Boundary
-
-![trusted untrusted boundary diagram](diagrams/trusted-untrusted-boundary.svg)
-
-[Open editable SVG source](diagrams/trusted-untrusted-boundary.svg).
-
-## Genuine screenshots
-
-Place real captures from your own practice execution in `screenshots/`. The authoring checkout does not include real workstation or GitHub UI captures, so none are presented as execution evidence.
-
-[Screenshot capture guide](screenshots/README.md).
+Genuine evidence capture instructions are in [`screenshots/README.md`](screenshots/README.md).

@@ -1,63 +1,23 @@
-# Visual index
+# Lab visual asset index
 
-## Original technical diagrams
+Diagrams are embedded beside the relevant implementation instructions in [`../README.md`](../README.md). These are conceptual or annotated illustrations, never screenshots of execution.
 
-### Image Publishing Flow
+| Diagram | Topic |
+|---|---|
+| [Api Request Response](diagrams/api-request-response.svg) | Original technical/implementation illustration |
+| [Application Architecture](diagrams/application-architecture.svg) | Original technical/implementation illustration |
+| [Client Api Database Flow](diagrams/client-api-database-flow.svg) | Original technical/implementation illustration |
+| [Complete Ci Pipeline](diagrams/complete-ci-pipeline.svg) | Original technical/implementation illustration |
+| [Crud Sequence](diagrams/crud-sequence.svg) | Original technical/implementation illustration |
+| [Docker Application Architecture](diagrams/docker-application-architecture.svg) | Original technical/implementation illustration |
+| [Image Publishing Flow](diagrams/image-publishing-flow.svg) | Original technical/implementation illustration |
+| [Pipeline Outcomes](diagrams/pipeline-outcomes.svg) | Original technical/implementation illustration |
+| [Pytest Architecture](diagrams/pytest-architecture.svg) | Original technical/implementation illustration |
+| [Step Ci Workflow](diagrams/step-ci-workflow.svg) | Original technical/implementation illustration |
+| [Step Flask Tree](diagrams/step-flask-tree.svg) | Original technical/implementation illustration |
+| [Step Local Api Docker](diagrams/step-local-api-docker.svg) | Original technical/implementation illustration |
+| [Step Pytest Ruff](diagrams/step-pytest-ruff.svg) | Original technical/implementation illustration |
+| [Step Python Setup](diagrams/step-python-setup.svg) | Original technical/implementation illustration |
+| [Step Routes Database](diagrams/step-routes-database.svg) | Original technical/implementation illustration |
 
-![image publishing flow diagram](diagrams/image-publishing-flow.svg)
-
-[Open editable SVG source](diagrams/image-publishing-flow.svg).
-
-### Api Request Response
-
-![api request response diagram](diagrams/api-request-response.svg)
-
-[Open editable SVG source](diagrams/api-request-response.svg).
-
-### Complete Ci Pipeline
-
-![complete ci pipeline diagram](diagrams/complete-ci-pipeline.svg)
-
-[Open editable SVG source](diagrams/complete-ci-pipeline.svg).
-
-### Crud Sequence
-
-![crud sequence diagram](diagrams/crud-sequence.svg)
-
-[Open editable SVG source](diagrams/crud-sequence.svg).
-
-### Pipeline Outcomes
-
-![pipeline outcomes diagram](diagrams/pipeline-outcomes.svg)
-
-[Open editable SVG source](diagrams/pipeline-outcomes.svg).
-
-### Client Api Database Flow
-
-![client api database flow diagram](diagrams/client-api-database-flow.svg)
-
-[Open editable SVG source](diagrams/client-api-database-flow.svg).
-
-### Application Architecture
-
-![application architecture diagram](diagrams/application-architecture.svg)
-
-[Open editable SVG source](diagrams/application-architecture.svg).
-
-### Pytest Architecture
-
-![pytest architecture diagram](diagrams/pytest-architecture.svg)
-
-[Open editable SVG source](diagrams/pytest-architecture.svg).
-
-### Docker Application Architecture
-
-![docker application architecture diagram](diagrams/docker-application-architecture.svg)
-
-[Open editable SVG source](diagrams/docker-application-architecture.svg).
-
-## Genuine screenshots
-
-Place real captures from your own practice execution in `screenshots/`. The authoring checkout does not include real workstation or GitHub UI captures, so none are presented as execution evidence.
-
-[Screenshot capture guide](screenshots/README.md).
+Genuine evidence capture instructions are in [`screenshots/README.md`](screenshots/README.md).

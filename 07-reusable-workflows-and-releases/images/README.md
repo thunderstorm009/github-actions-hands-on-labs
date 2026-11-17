@@ -1,57 +1,19 @@
-# Visual index
+# Lab visual asset index
 
-## Original technical diagrams
+Diagrams are embedded beside the relevant implementation instructions in [`../README.md`](../README.md). These are conceptual or annotated illustrations, never screenshots of execution.
 
-### Custom Action Execution
+| Diagram | Topic |
+|---|---|
+| [Caller Reusable Relationship](diagrams/caller-reusable-relationship.svg) | Original technical/implementation illustration |
+| [Composite Action Structure](diagrams/composite-action-structure.svg) | Original technical/implementation illustration |
+| [Custom Action Execution](diagrams/custom-action-execution.svg) | Original technical/implementation illustration |
+| [Inputs Outputs Dataflow](diagrams/inputs-outputs-dataflow.svg) | Original technical/implementation illustration |
+| [Release Automation Pipeline](diagrams/release-automation-pipeline.svg) | Original technical/implementation illustration |
+| [Reusable Cicd Architecture](diagrams/reusable-cicd-architecture.svg) | Original technical/implementation illustration |
+| [Reusable Workflow Architecture](diagrams/reusable-workflow-architecture.svg) | Original technical/implementation illustration |
+| [Step Composite Metadata](diagrams/step-composite-metadata.svg) | Original technical/implementation illustration |
+| [Step Release Tagging](diagrams/step-release-tagging.svg) | Original technical/implementation illustration |
+| [Step Workflow Call Code](diagrams/step-workflow-call-code.svg) | Original technical/implementation illustration |
+| [Versioning Tagging Lifecycle](diagrams/versioning-tagging-lifecycle.svg) | Original technical/implementation illustration |
 
-![custom action execution diagram](diagrams/custom-action-execution.svg)
-
-[Open editable SVG source](diagrams/custom-action-execution.svg).
-
-### Release Automation Pipeline
-
-![release automation pipeline diagram](diagrams/release-automation-pipeline.svg)
-
-[Open editable SVG source](diagrams/release-automation-pipeline.svg).
-
-### Reusable Cicd Architecture
-
-![reusable cicd architecture diagram](diagrams/reusable-cicd-architecture.svg)
-
-[Open editable SVG source](diagrams/reusable-cicd-architecture.svg).
-
-### Versioning Tagging Lifecycle
-
-![versioning tagging lifecycle diagram](diagrams/versioning-tagging-lifecycle.svg)
-
-[Open editable SVG source](diagrams/versioning-tagging-lifecycle.svg).
-
-### Caller Reusable Relationship
-
-![caller reusable relationship diagram](diagrams/caller-reusable-relationship.svg)
-
-[Open editable SVG source](diagrams/caller-reusable-relationship.svg).
-
-### Inputs Outputs Dataflow
-
-![inputs outputs dataflow diagram](diagrams/inputs-outputs-dataflow.svg)
-
-[Open editable SVG source](diagrams/inputs-outputs-dataflow.svg).
-
-### Reusable Workflow Architecture
-
-![reusable workflow architecture diagram](diagrams/reusable-workflow-architecture.svg)
-
-[Open editable SVG source](diagrams/reusable-workflow-architecture.svg).
-
-### Composite Action Structure
-
-![composite action structure diagram](diagrams/composite-action-structure.svg)
-
-[Open editable SVG source](diagrams/composite-action-structure.svg).
-
-## Genuine screenshots
-
-Place real captures from your own practice execution in `screenshots/`. The authoring checkout does not include real workstation or GitHub UI captures, so none are presented as execution evidence.
-
-[Screenshot capture guide](screenshots/README.md).
+Genuine evidence capture instructions are in [`screenshots/README.md`](screenshots/README.md).

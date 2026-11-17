@@ -1,87 +1,103 @@
 # Lab 02 — Multiple Jobs and Workflow Data
 
-Learn to divide work into jobs that may run in parallel, make jobs wait with `needs`, share small outputs and transfer files as artifacts. This mirrors build/test/report pipelines and keeps expensive work organized.
+Split a workflow into independently scheduled jobs, pass small values as outputs, and move files with artifacts. You will inspect why job order can differ, how `needs` creates dependencies, and how a matrix repeats the same test over several Python versions.
 
-## Estimated time
+## Estimated time and outcomes
 
 | Activity | Duration |
 |---|---:|
 | Concepts | 35 min |
-| Setup | 20 min |
+| VS Code setup and copy files | 20 min |
 | Implementation | 75 min |
-| Verification | 25 min |
+| Inspect graph, outputs and artifacts | 25 min |
 | Debugging | 20 min |
 | Exercises | 25 min |
 | **Total** | **2 h 40 min** |
 
-Beginners may need additional time. Prerequisites: Lab 01, Git, VS Code and a practice repository.
+Beginners may need more time. Prerequisites: Lab 01, Git, VS Code, GitHub practice repository. At the end, you can explain parallel jobs, `needs`, step/job outputs, artifacts, summaries, status functions, matrix expansion, concurrency and timeouts.
 
-## Concepts and graph
+## Architecture
 
-A job runs on its own runner. Jobs with no dependency can execute concurrently; `needs` waits for required jobs. Step outputs go through `$GITHUB_OUTPUT`, job outputs expose step output via `needs.<job>.outputs`. Artifacts persist files between isolated jobs. `success()`, `failure()` and `always()` are status functions. Matrix expands one job into variants. Concurrency groups can cancel obsolete runs; timeout limits wasted runner time.
+A job runs on its own runner, so its files are not automatically visible in another job. Jobs without `needs` may run in parallel. A matrix creates one job run per value. The diagram below maps directly to `multiple-jobs.yml`; `matrix-build.yml` is a separate workflow.
 
-```mermaid
-flowchart LR
- prepare --> report
- parallel-check --> report
- subgraph matrix[Separate matrix workflow]
- py311[Python 3.11] --> test[Same test steps]
- py312[Python 3.12] --> test
- py313[Python 3.13] --> test
- end
+![Job and matrix architecture](images/diagrams/job-dependency-graph.svg)
+
+*Conceptual execution map; actual order and duration appear in the GitHub run graph and vary.*
+
+## Step 1 — Add workflows to your practice repository
+
+**Where:** Open your separate practice repository in VS Code. Use Explorer to create `.github/workflows` if it does not exist. **Working directory:** practice repository root. Copy both complete files from this lab's `.github/workflows/` folder into the matching paths:
+
+- [`multiple-jobs.yml`](.github/workflows/multiple-jobs.yml)
+- [`matrix-build.yml`](.github/workflows/matrix-build.yml)
+
+The course examples live in subfolders and are not automatically active in the course repository. GitHub discovers workflow YAML only in the repository-root `.github/workflows/` directory. Read the files in VS Code and compare their structure to these annotated learning aids.
+
+![Parallel and dependent jobs](images/diagrams/parallel-jobs.svg)
+
+*`prepare` and `parallel-check` can run independently; `report` waits for both. The scheduler does not promise which independent job starts first.*
+
+![Step output to job output](images/diagrams/step-output-flow.svg)
+
+*The step ID and output key must match the expressions that expose and consume the value.*
+
+The essential output pattern in `multiple-jobs.yml` is:
+
+```yaml
+outputs:
+  greeting: ${{ steps.message.outputs.greeting }}
+steps:
+  - id: message
+    run: echo "greeting=Hello from prepare" >> "$GITHUB_OUTPUT"
 ```
 
-## Prepare and run
+`$GITHUB_OUTPUT` is a runner-provided file. Appending `key=value` records an output for that step. `id: message` gives the expression a stable reference; the job maps that step output to a job output. Downstream jobs read it through `needs.prepare.outputs.greeting`.
 
-Copy the files in this lab to your practice repository under `.github/workflows/`. From the practice repository root, run `git status`, then `git add .github/workflows`, `git commit -m "Add jobs and matrix workflows"`, `git push`. In Actions, open **Multiple jobs and workflow data**. Inspect the graph: `parallel-check` and `prepare` have no dependency and can run concurrently; `report` waits for both. Then open **Python matrix** and compare Python versions.
+![Artifact and job summary flow](images/diagrams/step-artifact-summary.svg)
 
-### Workflow walkthrough
+*Artifacts preserve files across runner workspaces; `$GITHUB_STEP_SUMMARY` adds Markdown to a run summary page.*
 
-`prepare` writes a step output to `$GITHUB_OUTPUT`, maps it as a job output, writes a file and uploads it as `lab-result`. `report` declares `needs`, downloads the artifact and reads the file; job boundaries mean it cannot just read `prepare`'s filesystem. Its summary is written to `$GITHUB_STEP_SUMMARY`. `if: always()` runs even after earlier failure; `failure()` is shown as an example but in this simple report job no failing prior step is expected. `matrix-build.yml` creates three independent variants, and `timeout-minutes` caps each. A failure in a needed job normally skips dependent jobs; use `if: always()` carefully when you need a diagnostic report.
+The upload/download actions use artifact name `lab-result` in both jobs. The report must declare `needs: [prepare, parallel-check]` before it can consume the job output/artifact reliably. Avoid uploading `.env`, tokens or other secrets.
 
-**Expected output (illustrative):** report log prints `Created by prepare`; summary shows `Hello from prepare`; matrix logs print selected Python version and `matrix test passed`. Exact scheduling order varies. A green job graph indicates success. If artifact download fails, verify names and dependency; if `needs` output is empty, verify step `id`, output key and mapping.
+![Matrix and status-function illustration](images/diagrams/step-matrix-status.svg)
 
+*Matrix variants are independent runs; status functions change whether later steps run after failures.*
 
-## Visual guide
+`success()` is true when prior steps succeeded; `failure()` is true after a failed step in the relevant job; `always()` runs regardless of prior result, including failure. Use `always()` for cleanup/reporting and preserve failure visibility—do not accidentally turn a failed job green. In the sample, `failure()` is present as a teaching example, while no deliberate failure is induced.
 
-These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+## Step 2 — Commit, push, and inspect
 
-### Job Dependency Graph
+**Where:** VS Code integrated terminal. **Working directory:** practice repository root.
 
-![job dependency graph](images/diagrams/job-dependency-graph.svg)
+```sh
+git status
+git add .github/workflows/multiple-jobs.yml .github/workflows/matrix-build.yml
+git commit -m "Add multiple jobs and matrix workflows"
+git push
+```
 
-### Sequential Needs
+**Example output:** `git status` lists two staged workflow files; push reports an updated branch. Exact commit IDs differ. On GitHub, open **Actions → Multiple jobs and workflow data → newest run**. The graph shows independent jobs and the dependent report. Open `prepare` to see the `$GITHUB_OUTPUT` and upload logs; open `report` to see download and file contents. Then inspect **Python matrix** and its three version variants.
 
-![sequential needs](images/diagrams/sequential-needs.svg)
+**Verify:** the run graph is green, report log contains `Created by prepare`, and summary displays `Hello from prepare`. Example output varies by runner. A dependent job skipped after upstream failure is expected. If output is empty, compare step ID, output key and job mapping. If artifact is missing, compare upload/download names and confirm dependency.
 
-### Workflow Output Passing
+## Step 3 — Failure and debugging exercise
 
-![workflow output passing](images/diagrams/workflow-output-passing.svg)
+Temporarily change the artifact name in the downloader only. Push and observe the report job fail at download. Open the first red step log, compare the exact artifact name, restore `lab-result`, commit, push and verify the repair run. This failure is intentional and confined to the practice repo.
 
-### Matrix Strategy
+## Exercises and review
 
-![matrix strategy](images/diagrams/matrix-strategy.svg)
+Guided: add a build job; pass a second output; upload a generated report. Independent: add concurrency group `${{ github.workflow }}-${{ github.ref }}` with `cancel-in-progress: true`; run lint independently while test needs build. Questions: why do jobs need artifacts? What does `needs` do? Output vs artifact? What expands a matrix? When should `always()` run? Debugging: mismatch names and repair. Integration: build → test → report plus independent lint and a three-version matrix. Hint: workflow expressions use `${{ }}`. Do not upload secrets.
 
-### Parallel Jobs
+## Cleanup, further reading and next lab
 
-![parallel jobs](images/diagrams/parallel-jobs.svg)
+Actions artifacts expire according to repository retention settings. Delete test runs/artifacts if desired. Read [workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax), [workflow artifacts](https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts), [job outputs](https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs). Continue to [Lab 03](../03-github-actions-docker-nginx/README.md).
 
-### Multiple Job Architecture
+## Visual coverage checklist
 
-![multiple job architecture](images/diagrams/multiple-job-architecture.svg)
-
-### Artifact Lifecycle
-
-![artifact lifecycle](images/diagrams/artifact-lifecycle.svg)
-
-## Exercises
-
-Guided: add a build job; pass a second output; upload a generated text report. Independent: add a concurrency group keyed by workflow/ref; make test run after build but lint run independently. Questions: why can't jobs share files directly? What does needs do? Difference between output and artifact? What expands matrix? When is `always()` useful? Debugging: mismatch artifact names then repair. Integration challenge: build→test→report plus independent lint and a three-version matrix. Hints/solutions: outputs use `$GITHUB_OUTPUT`; artifact names must match; concurrency uses `group: ${{ github.workflow }}-${{ github.ref }}` and `cancel-in-progress: true`.
-
-## Security, cleanup and further reading
-
-Use read-only permissions for these jobs. Do not upload secrets or `.env` files as artifacts. Runs/artifacts expire according to repository retention settings; delete test runs if desired. Further reading: [workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax), [workflow artifacts](https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts), [job outputs](https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs). Continue to [Lab 03](../03-github-actions-docker-nginx/README.md).
-
-## Screenshot index
-
-See `images/README.md`; capture a real graph and artifact log in your practice repository. No fabricated screenshots are included.
+| Major stage | Aid type | Nearby visual |
+|---|---|---|
+| Architecture and dependency graph | Conceptual diagram | Job graph above |
+| Workflow configuration | Annotated implementation diagram | Parallel jobs, output flow |
+| Transfer files and summary | Data-flow diagram | Artifact lifecycle |
+| Matrix and failure behavior | Execution illustration | Matrix/status diagram |
+| GitHub graph and step logs | Genuine screenshot capture card | [`images/screenshots/README.md`](images/screenshots/README.md); no lab run claimed here |
