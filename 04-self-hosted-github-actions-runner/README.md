@@ -30,6 +30,8 @@ Prepare a dedicated VM and update its OS. On the GitHub website open your *pract
 Copy `.github/workflows/self-hosted.yml` into your practice repo. It uses `workflow_dispatch`, the labels select a matching runner, and commands print basic host information. In Actions manually start **Self-hosted runner demo**. Verify the runner says **Idle** before dispatch, then **Online** and job completes. The job runs as the runner service account with access permitted to that host.
 
 Stop the runner with the service instructions printed by GitHub's setup page. In Settings → Runners, remove it. Then remove the runner directory and credentials/config from the VM according to official cleanup instructions. Confirm it no longer appears in repository Settings.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/38ffe508-ca74-44fe-8688-928e4345514e" />
+
 
 ## Security and troubleshooting
 
