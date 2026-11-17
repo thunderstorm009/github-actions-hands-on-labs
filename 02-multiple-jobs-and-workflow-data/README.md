@@ -102,7 +102,15 @@ flowchart LR
 
 *Folder-location diagram: the practice repository's workflow folder is the executable location.*
 
+![Practice repository structure and workflow location](images/diagrams/multiple-job-architecture.svg)
+
+*Implementation illustration, not a screenshot. The course files are nested; your own workflows must be at the practice repository root.*
+
 **Checkpoint:** run **git status --short** and verify the workflows are directly under the practice repository root's .github/workflows/.
+
+![Workflow editor screenshot capture placeholder](images/screenshots/PLACEHOLDER-workflow-editor.svg)
+
+*Placeholder card only. Capture your actual IDE/editor showing the practice root and a workflow file; use the [capture guide](images/screenshots/README.md). No editor screenshot is represented here.*
 
 ## 2. Workflow, job, step and runner
 
@@ -123,6 +131,10 @@ flowchart TB
 ~~~
 
 *Job hierarchy and filesystem isolation. Each job that needs source must check it out separately.*
+
+![Workflow and jobs code illustration](images/diagrams/step-workflow-jobs.svg)
+
+*Annotated YAML illustration; it is not an IDE screenshot.*
 
 Jobs without **needs** are eligible to execute in parallel. The order and overlap depend on runner availability; YAML order does not guarantee order. Every job receives a separate runner environment. A file created in one job is not automatically available in another.
 
@@ -147,6 +159,14 @@ flowchart LR
 
 The root **jobs** key contains unique job IDs. Each job needs **runs-on** and **steps**. Since build and lint have no dependency, either can start first.
 
+![Parallel jobs example](images/diagrams/parallel-jobs.svg)
+
+*Instructional diagram with independent jobs and a dependent report.*
+
+![Actual parallel Actions graph capture placeholder](images/screenshots/PLACEHOLDER-parallel-graph.svg)
+
+*Placeholder card, not GitHub evidence. Capture the genuine graph after running the workflow in your practice repository.*
+
 **Checkpoint:** the main workflow's prepare and parallel-check jobs have no dependency on each other.
 
 ## 3. Job dependencies using needs
@@ -170,7 +190,20 @@ flowchart LR
 
 *Dependency graph: report has two prerequisite edges. The two upstream jobs may run in either order.*
 
+![Supplemental fan-in dependency graph](images/diagrams/job-dependency-graph.svg)
+
+*Preserved generalized diagram: its example uses Prepare, Lint, Test, and Report labels to illustrate fan-in. The executable workflow above uses prepare and parallel-check → report; this SVG is conceptual and is not a screenshot or a different workflow file.*
+
+
 **Where to inspect:** after pushing in Section 9, open practice repo **Actions → Multiple jobs and workflow data → run**. The graph will show job cards and dependency lines. Expand each card for step details.
+
+![Sequential needs example](images/diagrams/sequential-needs.svg)
+
+*Conceptual image showing a consumer waiting for prerequisites.*
+
+![Job dependency logs capture placeholder](images/screenshots/PLACEHOLDER-job-dependency-logs.svg)
+
+*Placeholder card only. Capture the real graph and job status cards from your Actions run.*
 
 ## 4. Step outputs and GITHUB_OUTPUT
 
@@ -208,6 +241,14 @@ flowchart LR
 ~~~
 
 *The key, step ID, mapping, producer job ID, and downstream reference must agree. Outputs are for small strings, not files or secrets.*
+
+![Output passing workflow illustration](images/diagrams/workflow-output-passing.svg)
+
+*Annotated code illustration for the real output path in the example workflow.*
+
+![Step output log capture placeholder](images/screenshots/PLACEHOLDER-output-log.svg)
+
+*Placeholder card only. Capture the producer step and downstream consumer logs from a real run.*
 
 In the run logs, open **Create a small step output** to see the step ran. The value may not be printed by GitHub automatically, so the report step explicitly echoes the downstream environment variable. Never echo sensitive values.
 
@@ -252,6 +293,14 @@ sequenceDiagram
 
 *Artifact names must match. The sample retains it for seven days. Never upload tokens, .env files, credentials, or confidential data.*
 
+![Artifact lifecycle illustration](images/diagrams/artifact-lifecycle.svg)
+
+*Implementation diagram for file transfer between isolated runners.*
+
+![Artifact upload and download capture placeholder](images/screenshots/PLACEHOLDER-artifact-transfer.svg)
+
+*Placeholder card only. Capture the real upload and download action logs with the matching artifact name.*
+
 Use outputs for small values and artifacts for files. If download says not found, check exact artifact name and upload logs. If upload reports no files, inspect the generate-report step and working directory. Official actions are checkout v7, upload-artifact v6, download-artifact v6; major tags are convenient but production teams may pin reviewed action commits by full SHA.
 
 The report script at [examples/scripts/generate-report.sh](examples/scripts/generate-report.sh) reads the sample input and creates **output/lab-report.txt**. The workflow uploads this file, and the report job downloads and displays it.
@@ -281,11 +330,19 @@ flowchart LR
 
 *Logs explain execution; summaries present a concise report; artifacts transfer files.*
 
+![Artifact and summary code illustration](images/diagrams/step-artifact-summary.svg)
+
+*Implementation illustration of the generated file, artifact, and run summary.*
+
+![Rendered job summary capture placeholder](images/screenshots/PLACEHOLDER-summary-page.svg)
+
+*Placeholder card only. Capture the rendered Actions summary after the report job succeeds.*
+
 **Verify:** open the run summary after completion and find “Workflow data report” plus the artifact contents. If empty, check that the writing step ran and appended to the correct environment path.
 
 ## 7. Matrix strategy
 
-A matrix expands one job definition into one execution per value. The [Python matrix example](.github/workflows/matrix-build.yml) selects 3.11, 3.12, and 3.13 using actions/setup-python v6.
+A matrix expands one job definition into one execution per value. The [Python matrix example](.github/workflows/matrix-build.yml) selects 3.11, 3.12, and 3.13 using actions/setup-python v7.
 
 ~~~yaml
 strategy:
@@ -307,6 +364,14 @@ flowchart LR
 
 *Each variant is a separate job execution with its own runner. The workflow prints the selected interpreter and runs a small assertion.*
 
+![Matrix implementation illustration](images/diagrams/matrix-strategy.svg)
+
+*Annotated matrix configuration and expanded executions.*
+
+![Matrix job results capture placeholder](images/screenshots/PLACEHOLDER-matrix-results.svg)
+
+*Placeholder card only. Capture all three actual variants and one selected Python version log.*
+
 **fail-fast: false** lets remaining variants complete if one fails. **max-parallel** limits concurrent variants. Actual schedule may vary based on runner availability. The configuration is not evidence of success; execute and inspect all three versions in Actions. In the graph, compare job names and logs.
 
 ## 8. Conditions and status functions
@@ -323,15 +388,23 @@ flowchart TD
   P[Successful prerequisite] --> D{Default dependent condition}
   F[Intentional failure] --> D
   D -->|default success check is false| SK[Dependent job skipped]
-  D -->|if: always()| O[Observer runs]
-  O -->|if: failure()| DI[Failure message]
-  O -->|if: success()| SU[Success-only step skipped]
-  O -->|if: always()| SM[Summary written]
+  D -->|always condition| O[Observer runs]
+  O -->|failure condition| DI[Failure message]
+  O -->|success condition| SU[Success-only step skipped]
+  O -->|always condition| SM[Summary written]
   F --> RED[Workflow remains failed]
   SM --> RED
 ~~~
 
 *An observer can report a failed dependency while preserving the red workflow result. always() changes whether work is attempted; it does not make failed work successful.*
+
+![Status function implementation illustration](images/diagrams/step-matrix-status.svg)
+
+*Conceptual illustration of failure and always behavior; the manual workflow intentionally ends red.*
+
+![Conditional execution log capture placeholder](images/screenshots/PLACEHOLDER-conditional-failure.svg)
+
+*Placeholder card only. Capture the intentionally failed job, observer logs, skipped success-only step, and summary from a real run.*
 
 At job level, **if: always()** can allow a dependent job to run after a failed dependency. At step level, **if: failure()** runs a diagnostic step after a failed step/job context. The sample captures upstream results and writes a summary. It does not hide the intentionally failed job. Use always() carefully; cancellation/cleanup steps should be bounded and should not mask the original failure. The example does not trigger cancelled(); use it in an optional safe diagnostic if practicing cancellation.
 
@@ -438,6 +511,10 @@ flowchart TD
 
 *Debug in order: graph, first failing step, exact names/paths, then repair and rerun.*
 
+![Failure and repair capture placeholder](images/screenshots/PLACEHOLDER-failure-repair.svg)
+
+*Placeholder card only. Capture the failed practice run and the later green repair run as two separate genuine screenshots.*
+
 ## 12. Integration challenge
 
 Copy [examples/final-integration.yml](examples/final-integration.yml) to **.github/workflows/integration-challenge.yml** in your practice repository. This complete workflow implements **prepare → build → test matrix → report**, plus an independent lint job. It generates and transfers files, exposes a small output, writes a job summary, sets timeouts and concurrency, and preserves failure visibility.
@@ -452,6 +529,10 @@ flowchart LR
 ~~~
 
 *Keep each job's purpose obvious. Start with one test version, then expand to matrix after it passes.*
+
+![Integration workflow run capture placeholder](images/screenshots/PLACEHOLDER-integration-run.svg)
+
+*Placeholder card only. Capture the final real job graph, artifact download, and report summary.*
 
 Push this integration workflow only after copying its required examples directory. Inspect the graph, each Python test variant, artifact download logs, and final summary. To practice building it yourself, follow the listed order: prepare, build, test, independent lint, report, matrix, timeout and concurrency. Do not assume runner workspaces are shared.
 
@@ -478,18 +559,19 @@ Further reading: [workflow syntax](https://docs.github.com/en/actions/reference/
 
 Continue to [Lab 03 — Docker and NGINX](../03-github-actions-docker-nginx/README.md).
 
-## Visual coverage checklist
+## Visual coverage checklist — diagrams AND instructional images
 
-| Stage | Visual aid |
-|---|---|
-| Workflow/job/step/runner and isolation | hierarchy and filesystem diagram in Section 2 |
-| Parallel jobs and needs graph | diagrams in Sections 2–3 |
-| Output → job output → consumer | data-flow diagram in Section 4 |
-| Artifact upload/download | sequence diagram in Section 5 |
-| Logs, summary, artifacts | comparison diagram in Section 6 |
-| Matrix, conditions, concurrency, timeout | diagrams in Sections 7–9 |
-| Push-to-Actions lifecycle | sequence diagram in Section 10 |
-| Failure investigation | troubleshooting decision diagram in Section 11 |
-| Final integration | architecture in Section 12 |
-| Editable Mermaid diagram source | [Diagram index](images/README.md) |
-| Genuine editor/UI/log evidence | [Screenshot guide](images/screenshots/README.md); no UI run is fabricated |
+| Learning stage | Conceptual diagram | Instructional image or genuine capture prompt |
+|---|---|---|
+| Workflow fundamentals | Workflow/job/step/runner Mermaid hierarchy | [Workflow/jobs YAML illustration](images/diagrams/step-workflow-jobs.svg) and [editor capture placeholder](images/screenshots/PLACEHOLDER-workflow-editor.svg) |
+| Parallel jobs | Mermaid parallel execution | [Parallel jobs illustration](images/diagrams/parallel-jobs.svg) and [real graph capture placeholder](images/screenshots/PLACEHOLDER-parallel-graph.svg) |
+| Dependencies | Mermaid needs graph | [Sequential needs illustration](images/diagrams/sequential-needs.svg), [supplemental fan-in graph](images/diagrams/job-dependency-graph.svg), and [job logs capture placeholder](images/screenshots/PLACEHOLDER-job-dependency-logs.svg) |
+| Job outputs | Mermaid step → job → consumer data flow | [Output code illustration](images/diagrams/workflow-output-passing.svg) and [log capture placeholder](images/screenshots/PLACEHOLDER-output-log.svg) |
+| Artifacts | Mermaid upload/download sequence | [Artifact lifecycle illustration](images/diagrams/artifact-lifecycle.svg) and [upload/download capture placeholder](images/screenshots/PLACEHOLDER-artifact-transfer.svg) |
+| Job summaries | Mermaid logs/summary/artifact comparison | [Summary implementation illustration](images/diagrams/step-artifact-summary.svg) and [rendered summary capture placeholder](images/screenshots/PLACEHOLDER-summary-page.svg) |
+| Matrix | Mermaid matrix expansion | [Matrix implementation illustration](images/diagrams/matrix-strategy.svg) and [matrix results capture placeholder](images/screenshots/PLACEHOLDER-matrix-results.svg) |
+| Conditional execution | Mermaid status-function flow | [Status behavior illustration](images/diagrams/step-matrix-status.svg) and [conditional logs capture placeholder](images/screenshots/PLACEHOLDER-conditional-failure.svg) |
+| Debugging | Mermaid debugging decision tree | [Failed/repaired workflow capture placeholder](images/screenshots/PLACEHOLDER-failure-repair.svg) |
+| Integration challenge | Mermaid final integration architecture | [Final run capture placeholder](images/screenshots/PLACEHOLDER-integration-run.svg) |
+
+Placeholder cards are instructional images, not screenshots or execution evidence. Capture genuine GitHub/editor evidence in your own practice repository and follow [the screenshot guide](images/screenshots/README.md). The [image index](images/README.md) separates editable diagrams, retained implementation illustrations, and screenshot prompts.

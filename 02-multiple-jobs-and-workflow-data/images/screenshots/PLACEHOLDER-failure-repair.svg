@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="350" viewBox="0 0 1100 350" role="img" aria-labelledby="title desc">
+<title id="title">Failed run and repaired run — screenshot capture placeholder</title>
+<desc id="desc">Show the first failed step and the subsequent green run. Keep the two real captures distinct.</desc>
+<rect width="1100" height="350" rx="24" fill="#f4f7fb"/>
+<rect x="24" y="24" width="1052" height="302" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<rect x="48" y="48" width="230" height="34" rx="17" fill="#fff7ed" stroke="#fdba74"/>
+<text x="163" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#9a3412">SCREENSHOT PLACEHOLDER</text>
+<text x="48" y="126" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#142b4a">Failed run and repaired run</text>
+<text x="48" y="173" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#334155">OPEN</text>
+<text x="118" y="173" font-family="Arial,sans-serif" font-size="15" fill="#334155">Capture one intentionally broken practice run, then the later repaired run</text>
+<text x="48" y="216" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#334155">CAPTURE</text>
+<text x="130" y="216" font-family="Arial,sans-serif" font-size="15" fill="#334155">Show the first failed step and the subsequent green run. Keep the two real captures distinct.</text>
+<line x1="48" y1="282" x2="1050" y2="282" stroke="#e2e8f0"/>
+<text x="48" y="306" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#b45309">Illustrative capture guide only • not GitHub evidence</text>
+</svg>
