@@ -46,7 +46,6 @@ On GitHub, choose **New repository**, name it **docker-nginx-actions-lab**, choo
 
 <img width="963" height="190" alt="image" src="https://github.com/user-attachments/assets/3d05bc30-c87e-4433-92ae-0c067207de69" />
 
-*Capture card only, not a GitHub screenshot. Capture the real repository creation page after completing this step; see the [screenshot guide](images/screenshots/README.md).*
 
 ### Clone and configure Git
 
@@ -120,7 +119,6 @@ New-Item -ItemType Directory -Force website, .github/workflows | Out-Null
 ![Placeholder: create project structure](<img width="950" height="171" alt="image" src="https://github.com/user-attachments/assets/82fd4eab-d180-48bf-a4ec-b0684f572ed6" />
 )
 
-*Capture card only. Capture the actual file tree in your IDE or terminal after creating the folders.*
 
 
 
@@ -172,7 +170,6 @@ The marker gives automation an exact assertion. A generic NGINX welcome page wil
 ![Placeholder: edit the HTML page](<img width="957" height="184" alt="image" src="https://github.com/user-attachments/assets/03113ac7-7417-4aff-9a7c-921cdfff1f0f" />
 )
 
-*Capture card only. Capture the real editor showing the marker and heading; this does not depict an editor.*
 
 The complete source is in [website/index.html](website/index.html).
 
@@ -279,7 +276,6 @@ This prevents Git metadata, workflows, visual assets, docs, and local environmen
 
 The [preserved annotated Dockerfile illustration](images/diagrams/step-dockerfile-anatomy.svg) shows the build instructions and ignore-file purpose. It was authored for an earlier NGINX tag; the current complete Dockerfile above is authoritative.
 
-*Capture card only. Capture your actual file and project tree, not a generated editor image.*
 
 **Checkpoint:** Dockerfile, nginx.conf, and website/ are all inside the build context. Do not exclude those files in .dockerignore.
 
