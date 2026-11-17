@@ -1,0 +1,31 @@
+name: Basic checkout
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    name: Inspect the repository on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this commit
+        uses: actions/checkout@v6
+      - name: List repository files
+        run: ls -la
+      - name: Show system and tool versions
+        run: |
+          echo "Runner OS: $RUNNER_OS"
+          uname -a
+          node --version
+          python3 --version
+          git --version
+      - name: Set and read a custom environment variable
+        env:
+          LAB_GREETING: Hello from the workflow
+        run: echo "$LAB_GREETING"
+      - name: Run only on main branch
+        if: github.ref == 'refs/heads/main'
+        run: echo "This run is on main"

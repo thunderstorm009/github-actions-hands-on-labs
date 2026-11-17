@@ -1,0 +1,3 @@
+# Security best practices
+
+Use workflow/job `permissions` to grant the minimum token access. Store credentials as repository or environment secrets, pass only to steps that need them, and never print or commit them. Masking is not a guarantee against transformations or deliberate exfiltration. Treat pull request content as untrusted; avoid privileged `pull_request_target` workflows that check out and execute fork code. Review third-party actions and pin full commit SHAs for sensitive pipelines. Self-hosted runners can expose their machine, files and network; isolate them and never run untrusted code there. Never put secrets in Docker build context or image layers. See [GitHub Actions security](https://docs.github.com/en/actions/security-for-github-actions).

@@ -1,0 +1,3 @@
+# Workflow debugging
+
+Open **Actions → workflow → run → job → step**. Read the first failing step and its surrounding context; later steps may be skipped because of that failure. Compare event, branch, runner, working directory and file path. Check indentation and expression syntax. Reproduce shell commands locally when possible, but remember the hosted runner is a separate machine. Add temporary non-sensitive `echo` or `pwd` diagnostics and remove them after. Never dump all environment variables or print secrets. Exit code zero means success; a nonzero command exit normally fails the step. See [common errors](COMMON-WORKFLOW-ERRORS.md).

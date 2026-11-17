@@ -1,0 +1,24 @@
+name: Docker NGINX
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build image
+        run: docker build --tag actions-nginx:ci .
+      - name: Start container
+        run: docker run --detach --name lab-nginx --publish 8080:80 actions-nginx:ci
+      - name: Verify HTTP response
+        run: |
+          for attempt in {1..10}; do
+            if curl --fail --silent http://localhost:8080/; then exit 0; fi
+            sleep 2
+          done
+          docker logs lab-nginx
+          exit 1
+      - name: Stop container
+        if: always()
+        run: docker rm --force lab-nginx || true

@@ -1,0 +1,11 @@
+name: Self-hosted runner demo
+on: [workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  identify-runner:
+    runs-on: [self-hosted, linux, x64]
+    steps:
+      - run: echo "Runner OS is $RUNNER_OS"
+      - run: uname -a
+      - run: echo "This runs on the registered host"

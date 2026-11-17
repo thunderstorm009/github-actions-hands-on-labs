@@ -1,0 +1,16 @@
+name: Call reusable workflow
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  call:
+    uses: ./.github/workflows/reusable.yml
+    with:
+      recipient: Actions learner
+  display:
+    needs: call
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          MESSAGE: ${{ needs.call.outputs.message }}
+        run: echo "$MESSAGE"

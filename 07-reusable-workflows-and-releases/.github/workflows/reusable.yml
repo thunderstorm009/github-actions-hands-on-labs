@@ -1,0 +1,22 @@
+name: Reusable greeting
+on:
+  workflow_call:
+    inputs:
+      recipient:
+        type: string
+        required: true
+    outputs:
+      message:
+        value: ${{ jobs.greet.outputs.message }}
+permissions:
+  contents: read
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    outputs:
+      message: ${{ steps.set.outputs.message }}
+    steps:
+      - id: set
+        env:
+          RECIPIENT: ${{ inputs.recipient }}
+        run: echo "message=Hello, $RECIPIENT" >> "$GITHUB_OUTPUT"

@@ -1,0 +1,17 @@
+name: Least privilege example
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: echo "Read-only workflow completed"
+      - name: Use a dummy secret without printing it
+        env:
+          DEMO_VALUE: ${{ secrets.DEMO_VALUE }}
+        run: |
+          if [ -n "$DEMO_VALUE" ]; then echo "Dummy secret is configured"; else echo "No dummy secret configured"; fi
