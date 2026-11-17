@@ -246,6 +246,11 @@ flowchart LR
 
 *Annotated code illustration for the real output path in the example workflow.*
 
+![Detailed step-output code illustration](images/diagrams/step-output-flow.svg)
+
+*This preserved code visual annotates the step ID, GITHUB_OUTPUT file, job output mapping, and downstream needs reference.*
+
+
 ![Step output log capture placeholder](images/screenshots/PLACEHOLDER-output-log.svg)
 
 *Placeholder card only. Capture the producer step and downstream consumer logs from a real run.*

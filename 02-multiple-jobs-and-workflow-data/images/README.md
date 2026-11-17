@@ -30,6 +30,7 @@ Lab 02 uses two complementary visual categories.
 | [Parallel jobs](diagrams/parallel-jobs.svg) | Visualize independent checks and a dependent report |
 | [Sequential needs](diagrams/sequential-needs.svg) | See prerequisite ordering |
 | [Output passing](diagrams/workflow-output-passing.svg) | Trace output expressions |
+| [Step output flow](diagrams/step-output-flow.svg) | Annotated step ID, output file, job mapping, and consumer expression |
 | [Artifact lifecycle](diagrams/artifact-lifecycle.svg) | Understand file upload/download across runners |
 | [Artifact and summary implementation](diagrams/step-artifact-summary.svg) | Connect a generated file, artifact, and summary |
 | [Matrix strategy](diagrams/matrix-strategy.svg) | Read a matrix definition and expanded jobs |
