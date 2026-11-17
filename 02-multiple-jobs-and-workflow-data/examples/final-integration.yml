@@ -1,0 +1,137 @@
+name: Final multi-job integration challenge
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: Prepare metadata and input
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      label: ${{ steps.meta.outputs.label }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Create a small output
+        id: meta
+        run: echo "label=integration-challenge" >> "$GITHUB_OUTPUT"
+      - name: Generate input file
+        run: |
+          mkdir -p output
+          echo "This file crosses runner boundaries as an artifact." > output/input.txt
+      - name: Upload input artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: integration-input
+          path: output/input.txt
+          if-no-files-found: error
+          retention-days: 7
+
+  lint:
+    name: Independent shell validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Validate example script and input
+        run: |
+          bash -n examples/scripts/generate-report.sh
+          test -s examples/prepare/input.txt
+          echo "Independent lint checks passed."
+
+  build:
+    name: Build a small manifest
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Download prepared input
+        uses: actions/download-artifact@v6
+        with:
+          name: integration-input
+          path: prepared
+      - name: Build manifest
+        env:
+          LABEL: ${{ needs.prepare.outputs.label }}
+        run: |
+          mkdir -p dist
+          {
+            echo "Build label: $LABEL"
+            cat prepared/input.txt
+          } > dist/build-info.txt
+          cat dist/build-info.txt
+      - name: Upload build result
+        uses: actions/upload-artifact@v6
+        with:
+          name: build-result
+          path: dist/build-info.txt
+          if-no-files-found: error
+          retention-days: 7
+
+  test:
+    name: Python ${{ matrix.python-version }} integration check
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Download build result
+        uses: actions/download-artifact@v6
+        with:
+          name: build-result
+          path: dist
+      - name: Verify built file
+        run: |
+          python --version
+          python -c "from pathlib import Path; p=Path('dist/build-info.txt'); assert p.is_file(); assert 'Build label: integration-challenge' in p.read_text(); print('integration check passed')"
+
+  report:
+    name: Publish workflow summary
+    needs: [prepare, lint, build, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download final build result
+        uses: actions/download-artifact@v6
+        with:
+          name: build-result
+          path: dist
+      - name: Write summary
+        env:
+          LABEL: ${{ needs.prepare.outputs.label }}
+        run: |
+          {
+            echo "## Integration challenge result"
+            echo ""
+            echo "- Metadata output: $LABEL"
+            echo "- Independent lint job: passed"
+            echo "- Build and Python matrix checks: passed"
+            echo ""
+            echo "### Build artifact"
+            cat dist/build-info.txt
+          } >> "$GITHUB_STEP_SUMMARY"

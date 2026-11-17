@@ -1,0 +1,7 @@
+flowchart TB
+  WF[Workflow] --> RUN[Workflow run]
+  RUN --> PREP[prepare job]
+  RUN --> CHECK[parallel-check job]
+  PREP --> P1[steps on runner A]
+  CHECK --> C1[steps on runner B]
+  P1 -. separate filesystem .-> C1

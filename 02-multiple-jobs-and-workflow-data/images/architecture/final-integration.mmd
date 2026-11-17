@@ -1,0 +1,6 @@
+flowchart LR
+  PREP[prepare: output + artifact] --> BUILD[build]
+  BUILD --> TEST[test matrix]
+  TEST --> REPORT[report: artifact + summary]
+  PREP --> REPORT
+  LINT[lint: independent] --> REPORT

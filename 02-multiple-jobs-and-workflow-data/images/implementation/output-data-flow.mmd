@@ -1,0 +1,4 @@
+flowchart LR
+  STEP[Step id: message] -->|name=value| FILE[$GITHUB_OUTPUT]
+  FILE -->|steps.message.outputs.greeting| JOB[prepare job output]
+  JOB -->|needs.prepare.outputs.greeting| DOWN[report job]

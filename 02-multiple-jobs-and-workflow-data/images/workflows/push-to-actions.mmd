@@ -1,0 +1,10 @@
+sequenceDiagram
+  participant E as Editor
+  participant G as Git
+  participant H as GitHub repository
+  participant R as Actions runner
+  E->>G: edit, add, commit
+  G->>H: push
+  H->>R: schedule workflow
+  R-->>H: graph, logs, artifacts, summary
+  H-->>E: Actions UI

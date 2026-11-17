@@ -1,0 +1,55 @@
+name: Conditional jobs and status functions
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  succeeds:
+    name: Successful job
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Demonstrate success()
+        if: success()
+        run: echo "This step runs because prior steps succeeded."
+  fails-on-purpose:
+    name: Intentional failure demonstration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail intentionally for this lesson
+        run: |
+          echo "This failure is intentional and isolated to a manual teaching workflow."
+          exit 1
+  observe-failure:
+    name: Observe status functions
+    needs: [succeeds, fails-on-purpose]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report the upstream failure
+        if: failure()
+        run: echo "failure() is true because fails-on-purpose failed."
+      - name: Show that success-only work is skipped
+        if: success()
+        run: echo "This message appears only if all needed jobs succeeded."
+      - name: Always write a diagnostic summary
+        if: always()
+        env:
+          SUCCESS_RESULT: ${{ needs.succeeds.result }}
+          FAILURE_RESULT: ${{ needs.fails-on-purpose.result }}
+        run: |
+          {
+            echo "## Status-function demonstration"
+            echo ""
+            echo "- succeeds job: $SUCCESS_RESULT"
+            echo "- fails-on-purpose job: $FAILURE_RESULT"
+            echo "- observe-failure ran with always() so it could report the outcome."
+            echo ""
+            echo "The workflow is expected to finish red because a required job failed."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Summary written. The intentional failed job remains visible."

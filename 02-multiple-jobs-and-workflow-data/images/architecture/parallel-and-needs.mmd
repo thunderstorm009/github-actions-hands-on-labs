@@ -1,0 +1,5 @@
+flowchart LR
+  EVENT[Trigger] --> PREP[prepare]
+  EVENT --> CHECK[parallel-check]
+  PREP --> REPORT[report]
+  CHECK --> REPORT

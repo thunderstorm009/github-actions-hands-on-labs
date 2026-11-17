@@ -1,0 +1,1 @@
+GitHub Actions jobs can run in parallel, depend on other jobs, and exchange small values or files.

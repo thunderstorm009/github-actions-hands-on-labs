@@ -1,35 +1,108 @@
 name: Multiple jobs and workflow data
-on: [push, workflow_dispatch]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prepare:
+    name: Prepare output and artifact
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       greeting: ${{ steps.message.outputs.greeting }}
     steps:
-      - uses: actions/checkout@v6
-      - id: message
-        run: echo "greeting=Hello from prepare" >> "$GITHUB_OUTPUT"
-      - run: mkdir -p output && echo "Created by prepare" > output/result.txt
-      - uses: actions/upload-artifact@v4
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Create a small step output
+        id: message
+        shell: bash
+        run: |
+          echo "greeting=Hello from prepare" >> "$GITHUB_OUTPUT"
+          echo "Wrote the greeting step output."
+
+      - name: Generate a report file
+        run: bash examples/scripts/generate-report.sh
+
+      - name: Upload report for another job
+        uses: actions/upload-artifact@v6
         with:
           name: lab-result
-          path: output/result.txt
+          path: output/lab-report.txt
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Add preparation details to this job summary
+        run: |
+          {
+            echo "## Prepare job"
+            echo ""
+            echo "- Greeting output: ${{ steps.message.outputs.greeting }}"
+            echo "- Report artifact: lab-result"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   parallel-check:
+    name: Independent validation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - run: echo "Independent job can run alongside prepare"
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Validate the sample input
+        run: |
+          test -s examples/prepare/input.txt
+          grep --fixed-strings "jobs can run in parallel" examples/prepare/input.txt
+          echo "Independent validation passed."
+
+      - name: Explain the separate workspace
+        run: echo "This is a different runner workspace from prepare."
+
   report:
+    name: Consume output and artifact
     needs: [prepare, parallel-check]
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download report artifact
+        uses: actions/download-artifact@v6
         with:
           name: lab-result
-      - run: cat result.txt
-      - run: echo "${{ needs.prepare.outputs.greeting }}" >> "$GITHUB_STEP_SUMMARY"
-      - if: failure()
-        run: echo "A prior step failed"
-      - if: always()
-        run: echo "Report job finished"
+          path: downloaded-report
+
+      - name: Read the small job output and downloaded file
+        env:
+          GREETING: ${{ needs.prepare.outputs.greeting }}
+        run: |
+          echo "Job output: $GREETING"
+          cat downloaded-report/lab-report.txt
+
+      - name: Write the run summary
+        env:
+          GREETING: ${{ needs.prepare.outputs.greeting }}
+        run: |
+          {
+            echo "## Workflow data report"
+            echo ""
+            echo "- Upstream job output: **$GREETING**"
+            echo "- Artifact downloaded: lab-result"
+            echo ""
+            echo "### Artifact contents"
+            echo ""
+            cat downloaded-report/lab-report.txt
+            echo ""
+            echo "### Result"
+            echo ""
+            echo "Both required upstream jobs completed successfully."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,10 @@
+sequenceDiagram
+  participant P as prepare runner
+  participant A as GitHub artifact service
+  participant R as report runner
+  P->>P: Generate report file
+  P->>A: Upload name lab-result
+  Note over P,R: Workspaces are separate
+  R->>A: Download name lab-result
+  A-->>R: File appears in downloaded-report
+  R->>R: Read file

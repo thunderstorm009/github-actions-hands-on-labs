@@ -1,0 +1,8 @@
+flowchart TD
+  FAIL[Upstream job fails] --> DEFAULT{Default success condition}
+  DEFAULT -->|false| SKIP[Dependent skipped]
+  FAIL --> ALWAYS[if: always observer runs]
+  ALWAYS --> FAILURE[if: failure diagnostic]
+  ALWAYS --> SUCCESS[if: success step skipped]
+  ALWAYS --> SUMMARY[if: always summary]
+  SUMMARY --> RED[Overall workflow remains failed]

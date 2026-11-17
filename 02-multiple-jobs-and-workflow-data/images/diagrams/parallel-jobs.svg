@@ -11,7 +11,7 @@
 <path d="M590 391.0 C665.0 391.0, 665.0 281.0, 732 281.0" fill="none" stroke="#54708f" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="40" y="240" width="210" height="82" rx="15" fill="#e5f1ff" stroke="#b7c8dc" stroke-width="1.5"/>
 <text x="56" y="271" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Trigger</text>
-<text x="56" y="298" font-family="Arial,sans-serif" font-size="12.5" fill="#40566f">push or manual run</text>
+<text x="56" y="298" font-family="Arial,sans-serif" font-size="12.5" fill="#40566f">push / PR / manual</text>
 <rect x="380" y="120" width="210" height="82" rx="15" fill="#e7f7f2" stroke="#b7c8dc" stroke-width="1.5"/>
 <text x="396" y="151" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Prepare</text>
 <text x="396" y="178" font-family="Arial,sans-serif" font-size="12.5" fill="#40566f">build output and artifact</text>

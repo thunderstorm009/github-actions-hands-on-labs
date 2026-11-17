@@ -1,0 +1,12 @@
+flowchart TD
+  START[Workflow not green] --> GRAPH[Inspect graph]
+  GRAPH --> FIRST[Open first failed step]
+  FIRST --> KIND{Symptom}
+  KIND -->|missing artifact| ART[Compare upload and download name]
+  KIND -->|empty output| OUT[Compare step id and output mapping]
+  KIND -->|wrong job order| NEEDS[Check needs]
+  KIND -->|unexpected skip| COND[Check condition and upstream result]
+  ART --> FIX[Repair one issue and rerun]
+  OUT --> FIX
+  NEEDS --> FIX
+  COND --> FIX

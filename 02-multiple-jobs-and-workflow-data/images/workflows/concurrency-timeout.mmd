@@ -1,0 +1,7 @@
+flowchart LR
+  NEW[New run in same concurrency group] --> CANCEL{cancel-in-progress?}
+  CANCEL -->|true| OLD[Older run cancelled]
+  CANCEL -->|false| KEEP[Existing run continues]
+  JOB[Job starts] --> LIMIT{Finished before timeout?}
+  LIMIT -->|yes| DONE[Result recorded]
+  LIMIT -->|no| STOP[Terminated and marked failed]

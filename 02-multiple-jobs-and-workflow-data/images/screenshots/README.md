@@ -1,16 +1,16 @@
-# Genuine screenshot plan
+# Genuine screenshot capture guide
 
-Capture after pushing both sample workflows to your practice repository. The graph must show concurrent prepare/parallel-check jobs and dependent report; logs must show matching artifact transfer and matrix versions.
+The repository contains conceptual diagrams, not GitHub execution screenshots. Capture images only after running workflows in your separate practice repository. Never recreate GitHub UI as an illustration and label it a screenshot. Do not include secrets, account email, private repository details, or personal access tokens.
 
-These captures are intentionally absent until produced from the real app/terminal/GitHub run. Do not draw, synthesize, or label a conceptual UI illustration as a screenshot. The SVG illustrations live separately in `../diagrams/`.
-
-| Filename | Application and exact page/command | What must be visible |
+| Suggested filename | Exact page or action | Learning evidence |
 |---|---|---|
-| `01-parallel-job-graph.png` | Practice repository GitHub Actions tab → actual run → job/step | Run status and exact named job/step output; not a mocked UI. |
-| `02-output-and-artifact-logs.png` | Practice repository GitHub Actions tab → actual run → job/step | Run status and exact named job/step output; not a mocked UI. |
-| `03-matrix-variants.png` | Practice repository GitHub Actions tab → actual run → job/step | Run status and exact named job/step output; not a mocked UI. |
-| `04-summary-page.png` | Practice repository GitHub Actions tab → actual run → job/step | Run status and exact named job/step output; not a mocked UI. |
+| workflow-files-in-editor.png | Any IDE, open practice repo root and .github/workflows/multiple-jobs.yml | Correct root folder and readable YAML; hide unrelated desktop content. |
+| parallel-job-graph.png | Practice repo → Actions → Multiple jobs and workflow data → run summary | Actual graph showing prepare and parallel-check independent, report dependent. |
+| prepare-output-and-upload.png | Same run → prepare job logs | Output step and successful lab-result artifact upload. |
+| report-download-and-summary.png | Same run → report job logs, then run summary | Download step, report contents, rendered Markdown summary. |
+| matrix-variants.png | Actions → Python matrix → actual run graph | Three execution names and selected Python version logs. |
+| intentional-failure.png | Actions → manually triggered conditional workflow | Red fails-on-purpose job and diagnostic step; run is intentionally red. |
+| repaired-success.png | Main workflow after restoring a deliberately broken example | New successful run after repair. |
+| final-integration-graph.png | Practice repo → final challenge run | Real dependency graph and job summaries. |
 
-## Capture procedure
-
-1. Perform the corresponding lab step in your own practice repository. 2. Open the exact page/terminal named in the table. 3. Capture the screen with your operating-system screenshot tool or browser screenshot command. 4. Crop only irrelevant desktop space; do not alter outputs. 5. Redact tokens, secret values, emails and private repo data before adding. 6. Add a caption in the lab README explaining what success/failure signal it demonstrates.
+Capture with the operating system screenshot utility or browser screenshot feature. Crop irrelevant desktop area only; do not alter text/status or synthesize interface elements. Redact private data before committing. Place screenshots beside matching README instructions. These captures are learner-generated evidence and should not be committed unless they contain no personal or private information.
