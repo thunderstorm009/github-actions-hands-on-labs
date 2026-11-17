@@ -60,4 +60,3 @@ These original diagrams explain the architecture and execution paths before you 
 ### Security Architecture
 
 ![security architecture](images/diagrams/security-architecture.svg)
-

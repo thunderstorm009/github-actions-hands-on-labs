@@ -74,4 +74,3 @@ These original diagrams explain the architecture and execution paths before you 
 ### Trusted Untrusted Boundary
 
 ![trusted untrusted boundary](images/diagrams/trusted-untrusted-boundary.svg)
-

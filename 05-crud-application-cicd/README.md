@@ -81,4 +81,3 @@ These original diagrams explain the architecture and execution paths before you 
 ### Docker Application Architecture
 
 ![docker application architecture](images/diagrams/docker-application-architecture.svg)
-

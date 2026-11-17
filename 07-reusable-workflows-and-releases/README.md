@@ -60,4 +60,3 @@ These original diagrams explain the architecture and execution paths before you 
 ### Composite Action Structure
 
 ![composite action structure](images/diagrams/composite-action-structure.svg)
-
