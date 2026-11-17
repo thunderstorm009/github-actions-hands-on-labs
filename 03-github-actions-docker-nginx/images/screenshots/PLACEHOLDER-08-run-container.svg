@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="350" viewBox="0 0 1100 350" role="img" aria-labelledby="title desc">
+<title id="title">Screenshot placeholder: Start container with mapped ports</title><desc id="desc">Terminal after docker run --detach --name lab-nginx --publish 8000:80. Actual returned container ID or real docker ps row.</desc>
+<rect width="1100" height="350" rx="24" fill="#f4f7fb"/><rect x="24" y="24" width="1052" height="302" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+<rect x="48" y="48" width="255" height="34" rx="17" fill="#fff7ed" stroke="#fdba74"/>
+<text x="175" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#9a3412">SCREENSHOT PLACEHOLDER</text>
+<text x="48" y="126" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#142b4a">Start container with mapped ports</text>
+<text x="48" y="174" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#334155">OPEN</text>
+<text x="110" y="174" font-family="Arial,sans-serif" font-size="14" fill="#334155">Terminal after docker run --detach --name lab-nginx --publish 8000:80</text>
+<text x="48" y="218" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#334155">CAPTURE</text><text x="135" y="218" font-family="Arial,sans-serif" font-size="15" fill="#334155">Actual returned container ID or real docker ps row.</text>
+<line x1="48" y1="282" x2="1050" y2="282" stroke="#e2e8f0"/>
+<text x="48" y="306" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#b45309">Capture real evidence in your practice repository • This card is not a screenshot</text>
+</svg>

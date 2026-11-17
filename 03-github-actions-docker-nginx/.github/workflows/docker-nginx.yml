@@ -1,24 +1,47 @@
-name: Docker NGINX
-on: [push, pull_request, workflow_dispatch]
+name: Docker NGINX CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   build-and-smoke-test:
+    name: Build and test NGINX image
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
+      - name: Check out repository
+        uses: actions/checkout@v7
       - name: Build image
         run: docker build --tag actions-nginx:ci .
       - name: Start container
-        run: docker run --detach --name lab-nginx --publish 8080:80 actions-nginx:ci
-      - name: Verify HTTP response
+        run: docker run --detach --publish 127.0.0.1:8080:80 --name lab-nginx-ci actions-nginx:ci
+      - name: Verify page marker and health endpoint
+        shell: bash
         run: |
           for attempt in {1..10}; do
-            if curl --fail --silent http://localhost:8080/; then exit 0; fi
+            if curl --fail --silent --show-error http://127.0.0.1:8080/ -o response.html; then
+              break
+            fi
+            if [ "$attempt" -eq 10 ]; then
+              echo "NGINX did not answer after 10 attempts." >&2
+              exit 1
+            fi
             sleep 2
           done
-          docker logs lab-nginx
-          exit 1
-      - name: Stop container
+          grep --fixed-strings "NGINX_DOCKER_HUB_LAB_READY" response.html
+          test "$(curl --fail --silent http://127.0.0.1:8080/healthz)" = "healthy"
+          echo "Page marker and /healthz passed."
+      - name: Print diagnostics after a failure
+        if: failure()
+        run: |
+          docker ps --all || true
+          docker logs lab-nginx-ci || true
+          docker inspect lab-nginx-ci || true
+      - name: Clean up test container
         if: always()
-        run: docker rm --force lab-nginx || true
+        run: docker rm --force lab-nginx-ci || true
