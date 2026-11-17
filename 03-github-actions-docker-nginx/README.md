@@ -7,14 +7,14 @@ Build a small static site image, run it locally in NGINX, then repeat the build 
 | Activity | Duration |
 |---|---:|
 | Docker and networking concepts | 35 min |
-| Docker/VS Code setup | 30 min |
+| Docker/editor setup | 30 min |
 | Website and container implementation | 75 min |
 | Local and Actions verification | 25 min |
 | Debugging | 20 min |
 | Exercises | 25 min |
 | **Total** | **3 h 30 min** |
 
-Beginners may need extra time. Need Git, VS Code, Docker Desktop/Engine and Lab 01. Verify `docker --version` and `docker info` before continuing.
+Beginners may need extra time. Need Git, any file/project editor, Docker Desktop/Engine and Lab 01. Verify `docker --version` and `docker info` before continuing.
 
 ## Step 1 — Understand the image and request path
 
@@ -26,9 +26,13 @@ A Dockerfile describes how to assemble an image. The image is an immutable templ
 
 The project files are [`Dockerfile`](Dockerfile), [`.dockerignore`](.dockerignore), [`website/index.html`](website/index.html), and [`.github/workflows/docker-nginx.yml`](.github/workflows/docker-nginx.yml). Keep these at the practice repository root in those paths.
 
+![Docker image and container relationship](images/diagrams/docker-architecture.svg)
+
+*An image is the built template; `docker run` creates a container from it.*
+
 ## Step 2 — Build and run locally
 
-**Where:** VS Code terminal. **Working directory:** practice repository root containing the Dockerfile.
+**Where:** your editor integrated or system terminal. **Working directory:** practice repository root containing the Dockerfile.
 
 ```sh
 docker build -t actions-nginx:local .
@@ -38,6 +42,10 @@ docker run --detach --name lab-nginx --publish 8080:80 actions-nginx:local
 ![Local Docker command sequence](images/diagrams/step-local-docker-commands.svg)
 
 *Command illustration: host port `8080` maps to NGINX container port `80`.*
+
+![Browser request and host-to-container port mapping](images/diagrams/browser-nginx-request-flow.svg)
+
+*The browser reaches host port 8080; Docker forwards to NGINX port 80 inside the container.*
 
 **Example output:** build output ends with an image ID/tag; run returns a long container ID. Exact text varies by Docker version. Open `http://localhost:8080` in your browser. Verify in another terminal with `curl http://localhost:8080`; on PowerShell use `Invoke-WebRequest http://localhost:8080`. The returned HTML includes “Hello from NGINX in Docker.”
 
@@ -71,7 +79,7 @@ Port busy: map `8081:80` and browse `localhost:8081`. Docker unavailable: start 
 
 Guided: edit page title; change host port; add a page. Independent: tag by commit SHA; add HTTP body assertion. Questions: image vs container? What is build context? What do `-p 8080:80` ports mean? Why cannot a local browser reach runner localhost? Why `always()` cleanup? Debug: rename `website/` and inspect build error, then repair. Integration: build, start, assert unique page text and cleanup.
 
-Optional GHCR publishing requires `packages: write`, login and package policy; the basic lab needs no registry. Read [Docker docs](https://docs.docker.com/), [NGINX image](https://hub.docker.com/_/nginx), [GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Next: [Lab 04](../04-self-hosted-github-actions-runner/README.md).
+Optional GHCR publishing requires `packages: write`, login and package policy; the basic lab needs no registry. See the [optional GHCR flow](images/diagrams/ghcr-publishing-flow.svg) for the conceptual sequence; this course does not include or claim a publishing workflow. Read [Docker docs](https://docs.docker.com/), [NGINX image](https://hub.docker.com/_/nginx), [GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Next: [Lab 04](../04-self-hosted-github-actions-runner/README.md).
 
 ## Visual coverage checklist
 

@@ -1,23 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1072" height="478" viewBox="0 0 1072 478">
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="760" viewBox="0 0 1420 760">
 <rect width="100%" height="100%" rx="20" fill="#f5f8fc"/>
-<text x="34" y="42" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#142b4a">Step · Route to parameterized SQL</text>
-<text x="34" y="68" font-family="Arial,sans-serif" font-size="13" fill="#52657d">Annotated learning illustration · not a screenshot</text>
-<rect x="34" y="92" width="320" height="146" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
-<text x="50" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">HTTP route</text>
-<text x="50" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">validate JSON name</text>
-<path d="M356 165.0 L372 165.0" stroke="#54708f" stroke-width="2"/>
-<rect x="376" y="92" width="320" height="146" rx="14" fill="#e7f7f2" stroke="#b7c8dc"/>
-<text x="392" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Parameterized query</text>
-<text x="392" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">INSERT INTO items(name) VALUES (?)</text>
-<path d="M698 165.0 L714 165.0" stroke="#54708f" stroke-width="2"/>
-<rect x="718" y="92" width="320" height="146" rx="14" fill="#fff2dc" stroke="#b7c8dc"/>
-<text x="734" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">SQLite</text>
-<text x="734" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">table initialized by create_app</text>
-<rect x="34" y="260" width="320" height="146" rx="14" fill="#f0eaff" stroke="#b7c8dc"/>
-<text x="50" y="288" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Commit</text>
-<text x="50" y="315" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">persist change</text>
-<path d="M356 333.0 L372 333.0" stroke="#54708f" stroke-width="2"/>
-<rect x="376" y="260" width="320" height="146" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
-<text x="392" y="288" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Response</text>
-<text x="392" y="315" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">201 + JSON item; errors use 400 / 404</text>
+<text x="34" y="42" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#142b4a">Lab 05 · Flask factory, route validation and SQLite</text>
+<text x="34" y="70" font-family="Arial,sans-serif" font-size="14" fill="#52657d">Code illustration from app/__init__.py + app/routes.py · not an IDE screenshot</text>
+<rect x="34" y="126" width="850" height="502" rx="14" fill="#101b2b"/>
+<text x="52" y="156" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">01</text>
+<text x="88" y="156" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">def create_app(test_config=None):</text>
+<text x="52" y="177" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">02</text>
+<text x="88" y="177" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    app = Flask(__name__)</text>
+<rect x="42" y="182" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="198" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">03</text>
+<text x="88" y="198" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    app.config["DATABASE"] = (</text>
+<text x="52" y="219" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">04</text>
+<text x="88" y="219" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">        ":memory:" if test_config and test_config.get("TESTING") else "app.db"</text>
+<rect x="42" y="224" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="240" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">05</text>
+<text x="88" y="240" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    )</text>
+<text x="52" y="261" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">06</text>
+<text x="88" y="261" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    if test_config:</text>
+<text x="52" y="282" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">07</text>
+<text x="88" y="282" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">        app.config.update(test_config)</text>
+<rect x="42" y="287" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="303" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">08</text>
+<text x="88" y="303" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    from app.db import init_app</text>
+<text x="52" y="324" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">09</text>
+<text x="88" y="324" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    init_app(app)</text>
+<rect x="42" y="329" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="345" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">10</text>
+<text x="88" y="345" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    app.register_blueprint(api)</text>
+<rect x="42" y="350" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="366" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">11</text>
+<text x="88" y="366" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    return app</text>
+<rect x="42" y="371" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="387" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">12</text>
+<text x="88" y="387" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8"></text>
+<text x="52" y="408" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">13</text>
+<text x="88" y="408" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">@api.post("/items")</text>
+<text x="52" y="429" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">14</text>
+<text x="88" y="429" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">def create_item():</text>
+<rect x="42" y="434" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="450" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">15</text>
+<text x="88" y="450" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    data = request.get_json(silent=True) or {}</text>
+<text x="52" y="471" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">16</text>
+<text x="88" y="471" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    name = data.get("name")</text>
+<text x="52" y="492" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">17</text>
+<text x="88" y="492" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    if not isinstance(name, str) or not name.strip():</text>
+<text x="52" y="513" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">18</text>
+<text x="88" y="513" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">        abort(400, "name is required")</text>
+<rect x="42" y="518" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="534" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">19</text>
+<text x="88" y="534" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    name = name.strip()</text>
+<text x="52" y="555" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">20</text>
+<text x="88" y="555" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    cursor = get_db().execute("INSERT INTO items(name) VALUES (?)", (name,))</text>
+<rect x="42" y="560" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="576" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">21</text>
+<text x="88" y="576" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    get_db().commit()</text>
+<rect x="42" y="581" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="597" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">22</text>
+<text x="88" y="597" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    return jsonify({"id": cursor.lastrowid, "name": name}), 201</text>
+<rect x="920" y="126" width="465" height="104" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
+<circle cx="943" cy="150" r="13" fill="#173d68"/><text x="943" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
+<text x="966" y="155" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">App factory</text>
+<text x="936" y="182" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">Build a configured Flask app; initialize DB and register routes.</text>
+<text x="936" y="206" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 1–11</text>
+<rect x="920" y="250" width="465" height="104" rx="14" fill="#e7f7f2" stroke="#b7c8dc"/>
+<circle cx="943" cy="274" r="13" fill="#173d68"/><text x="943" y="279" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
+<text x="966" y="279" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Test configuration</text>
+<text x="936" y="306" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">Tests override the in-memory/default DB with tmp_path/test.sqlite.</text>
+<text x="936" y="330" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 3–7</text>
+<rect x="920" y="374" width="465" height="104" rx="14" fill="#fff2dc" stroke="#b7c8dc"/>
+<circle cx="943" cy="398" r="13" fill="#173d68"/><text x="943" y="403" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
+<text x="966" y="403" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Validate request</text>
+<text x="936" y="430" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">Missing or blank name returns HTTP 400.</text>
+<text x="936" y="454" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 14–18</text>
+<rect x="920" y="498" width="465" height="104" rx="14" fill="#f0eaff" stroke="#b7c8dc"/>
+<circle cx="943" cy="522" r="13" fill="#173d68"/><text x="943" y="527" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">4</text>
+<text x="966" y="527" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Parameterized SQL</text>
+<text x="936" y="554" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">The ? placeholder keeps input as data; commit stores the row.</text>
+<text x="936" y="578" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 19–21</text>
+<rect x="920" y="622" width="465" height="104" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
+<circle cx="943" cy="646" r="13" fill="#173d68"/><text x="943" y="651" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">5</text>
+<text x="966" y="651" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Created response</text>
+<text x="936" y="678" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">Return HTTP 201 and a JSON item containing its ID.</text>
+<text x="936" y="702" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 22–23</text>
 </svg>

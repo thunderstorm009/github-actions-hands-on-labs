@@ -57,3 +57,7 @@ Lab pages include diagrams and a screenshot index. Repository screenshots are la
 ## Contribute
 
 Found a confusing step or want to add a challenge? Start with [CONTRIBUTING.md](CONTRIBUTING.md), reproduce commands in a clean practice repository, and include genuine evidence or a clearly labeled placeholder.
+
+Visual documentation uses original editable diagrams and annotated command/configuration illustrations beside implementation steps. Genuine course-repository and course-check screenshots are clearly distinguished from each learner's practice-run screenshots. All instructional files are IDE-neutral: VS Code is the pictured walkthrough, while any editor with project/file and terminal support works.
+
+See the [visual coverage audit](docs/VISUAL-AUDIT.md) for per-lab diagram, illustration and screenshot evidence status.

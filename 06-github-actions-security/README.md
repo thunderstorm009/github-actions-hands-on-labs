@@ -23,6 +23,10 @@ Copy [`least-privilege.yml`](.github/workflows/least-privilege.yml) to your prac
 
 *The permission box shows the example scope, not an Actions UI capture.*
 
+![Least privilege compared with broad write access](images/diagrams/least-privilege-comparison.svg)
+
+*The secure example grants read access needed for checkout and no broad write scope.*
+
 ## Step 2 — Use a dummy secret without logging it
 
 In practice repo **Settings → Secrets and variables → Actions → New repository secret**, add key `DEMO_VALUE` with a fake value such as `not-a-real-credential`. The sample injects it only into one step and prints a presence message. It never prints the value. After pushing and inspecting the step log, delete the dummy secret from Settings.
@@ -44,6 +48,14 @@ A fork pull request is untrusted code. Run ordinary CI on `pull_request` with mi
 An environment can store environment-scoped secrets and apply protection rules/approval gates before a deployment job proceeds. Do not configure an actual deployment for this lab. OIDC lets a job request a short-lived identity token; a cloud trust policy checks repository/ref/workflow claims before granting temporary access. This avoids storing a long-lived cloud key, but policy must still be narrow.
 
 Other topics: review third-party actions, pin sensitive dependencies to a full commit SHA, track updates, and keep token scopes minimal. Read the security guide before broadening permissions.
+
+![Secure and unsafe workflow patterns](images/diagrams/secure-insecure-patterns.svg)
+
+*The unsafe pattern interpolates untrusted text into a shell script; treat it as a review example only.*
+
+![OIDC short-lived identity exchange](images/diagrams/oidc-authentication.svg)
+
+*OIDC relies on cloud-side claim validation and short-lived credentials; it is a concept diagram, not a cloud login run.*
 
 ## Verify, practice and cleanup
 

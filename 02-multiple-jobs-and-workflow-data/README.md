@@ -7,14 +7,14 @@ Split a workflow into independently scheduled jobs, pass small values as outputs
 | Activity | Duration |
 |---|---:|
 | Concepts | 35 min |
-| VS Code setup and copy files | 20 min |
+| Editor setup and copy files | 20 min |
 | Implementation | 75 min |
 | Inspect graph, outputs and artifacts | 25 min |
 | Debugging | 20 min |
 | Exercises | 25 min |
 | **Total** | **2 h 40 min** |
 
-Beginners may need more time. Prerequisites: Lab 01, Git, VS Code, GitHub practice repository. At the end, you can explain parallel jobs, `needs`, step/job outputs, artifacts, summaries, status functions, matrix expansion, concurrency and timeouts.
+Beginners may need more time. Prerequisites: Lab 01, Git, any project editor with file/folder support, and a GitHub practice repository. At the end, you can explain parallel jobs, `needs`, step/job outputs, artifacts, summaries, status functions, matrix expansion, concurrency and timeouts.
 
 ## Architecture
 
@@ -26,12 +26,12 @@ A job runs on its own runner, so its files are not automatically visible in anot
 
 ## Step 1 — Add workflows to your practice repository
 
-**Where:** Open your separate practice repository in VS Code. Use Explorer to create `.github/workflows` if it does not exist. **Working directory:** practice repository root. Copy both complete files from this lab's `.github/workflows/` folder into the matching paths:
+**Where:** Open your separate practice repository in your IDE/editor. Use its project pane to create `.github/workflows` if it does not exist. **Working directory:** practice repository root. Copy both complete files from this lab's `.github/workflows/` folder into the matching paths:
 
 - [`multiple-jobs.yml`](.github/workflows/multiple-jobs.yml)
 - [`matrix-build.yml`](.github/workflows/matrix-build.yml)
 
-The course examples live in subfolders and are not automatically active in the course repository. GitHub discovers workflow YAML only in the repository-root `.github/workflows/` directory. Read the files in VS Code and compare their structure to these annotated learning aids.
+The course examples live in subfolders and are not automatically active in the course repository. GitHub discovers workflow YAML only in the repository-root `.github/workflows/` directory. Read the files in your editor and compare their structure to these annotated learning aids.
 
 ![Parallel and dependent jobs](images/diagrams/parallel-jobs.svg)
 
@@ -67,7 +67,7 @@ The upload/download actions use artifact name `lab-result` in both jobs. The rep
 
 ## Step 2 — Commit, push, and inspect
 
-**Where:** VS Code integrated terminal. **Working directory:** practice repository root.
+**Where:** the IDE integrated or system terminal. **Working directory:** practice repository root.
 
 ```sh
 git status

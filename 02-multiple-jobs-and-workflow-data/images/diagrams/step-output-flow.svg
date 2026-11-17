@@ -1,20 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1072" height="478" viewBox="0 0 1072 478">
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="636" viewBox="0 0 1420 636">
 <rect width="100%" height="100%" rx="20" fill="#f5f8fc"/>
-<text x="34" y="42" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#142b4a">Implementation · Output from step to job</text>
-<text x="34" y="68" font-family="Arial,sans-serif" font-size="13" fill="#52657d">Annotated learning illustration · not a screenshot</text>
-<rect x="34" y="92" width="320" height="146" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
-<text x="50" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Step id: message</text>
-<text x="50" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">run appends key=value</text>
-<path d="M356 165.0 L372 165.0" stroke="#54708f" stroke-width="2"/>
-<rect x="376" y="92" width="320" height="146" rx="14" fill="#e7f7f2" stroke="#b7c8dc"/>
-<text x="392" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">$GITHUB_OUTPUT</text>
-<text x="392" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">echo "greeting=Hello" &gt;&gt; file</text>
-<path d="M698 165.0 L714 165.0" stroke="#54708f" stroke-width="2"/>
-<rect x="718" y="92" width="320" height="146" rx="14" fill="#fff2dc" stroke="#b7c8dc"/>
-<text x="734" y="120" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Job outputs</text>
-<text x="734" y="147" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">greeting: ${{ </text>
-<text x="734" y="165" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">steps.message.outputs.greeting }}</text>
-<rect x="34" y="260" width="320" height="146" rx="14" fill="#f0eaff" stroke="#b7c8dc"/>
-<text x="50" y="288" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Consumer</text>
-<text x="50" y="315" font-family="Menlo,Consolas,monospace" font-size="12.5" fill="#344a62">needs.prepare.outputs.greeting</text>
+<text x="34" y="42" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#142b4a">Lab 02 · Step output becomes a job output</text>
+<text x="34" y="70" font-family="Arial,sans-serif" font-size="14" fill="#52657d">Code illustration from multiple-jobs.yml · not an IDE screenshot</text>
+<rect x="34" y="126" width="850" height="271" rx="14" fill="#101b2b"/>
+<text x="52" y="156" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">01</text>
+<text x="88" y="156" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">jobs:</text>
+<text x="52" y="177" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">02</text>
+<text x="88" y="177" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">  prepare:</text>
+<text x="52" y="198" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">03</text>
+<text x="88" y="198" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    outputs:</text>
+<text x="52" y="219" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">04</text>
+<text x="88" y="219" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">      greeting: ${{ steps.message.outputs.greeting }}</text>
+<rect x="42" y="224" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="240" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">05</text>
+<text x="88" y="240" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    steps:</text>
+<rect x="42" y="245" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="261" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">06</text>
+<text x="88" y="261" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">      - id: message</text>
+<rect x="42" y="266" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="282" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">07</text>
+<text x="88" y="282" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">        run: echo "greeting=Hello from prepare" &gt;&gt; "$GITHUB_OUTPUT"</text>
+<rect x="42" y="287" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="303" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">08</text>
+<text x="88" y="303" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">  report:</text>
+<rect x="42" y="308" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="324" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">09</text>
+<text x="88" y="324" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    needs: [prepare, parallel-check]</text>
+<rect x="42" y="329" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="345" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">10</text>
+<text x="88" y="345" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">    steps:</text>
+<rect x="42" y="350" width="834" height="21" rx="4" fill="#213c5c"/>
+<text x="52" y="366" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#91a5ba">11</text>
+<text x="88" y="366" font-family="Menlo,Consolas,monospace" font-size="13.5" fill="#e2edf8">      - run: echo "${{ needs.prepare.outputs.greeting }}"</text>
+<rect x="920" y="126" width="465" height="104" rx="14" fill="#e5f1ff" stroke="#b7c8dc"/>
+<circle cx="943" cy="150" r="13" fill="#173d68"/><text x="943" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
+<text x="966" y="155" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Step output file</text>
+<text x="936" y="182" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">Append key=value to the runner-provided GITHUB_OUTPUT file.</text>
+<text x="936" y="206" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 5–7</text>
+<rect x="920" y="250" width="465" height="104" rx="14" fill="#e7f7f2" stroke="#b7c8dc"/>
+<circle cx="943" cy="274" r="13" fill="#173d68"/><text x="943" y="279" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
+<text x="966" y="279" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Stable step ID</text>
+<text x="936" y="306" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">The step id becomes the expression key used by outputs.message.</text>
+<text x="936" y="330" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Line 6</text>
+<rect x="920" y="374" width="465" height="104" rx="14" fill="#fff2dc" stroke="#b7c8dc"/>
+<circle cx="943" cy="398" r="13" fill="#173d68"/><text x="943" y="403" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
+<text x="966" y="403" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Job output map</text>
+<text x="936" y="430" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">Expose the step output as the prepare job output greeting.</text>
+<text x="936" y="454" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 3–4</text>
+<rect x="920" y="498" width="465" height="104" rx="14" fill="#f0eaff" stroke="#b7c8dc"/>
+<circle cx="943" cy="522" r="13" fill="#173d68"/><text x="943" y="527" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="white">4</text>
+<text x="966" y="527" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#142b4a">Consumer dependency</text>
+<text x="936" y="554" font-family="Arial,sans-serif" font-size="13.5" fill="#40566f">needs waits for prepare before report reads needs.prepare.outputs.greeting.</text>
+<text x="936" y="578" font-family="Arial,sans-serif" font-size="12" fill="#52657d">Lines 8–11</text>
 </svg>

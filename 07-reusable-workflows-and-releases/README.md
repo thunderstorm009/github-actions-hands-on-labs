@@ -15,6 +15,10 @@ Reuse a workflow through `workflow_call`, define a composite action, pass values
 
 Beginners may need longer. Need Lab 02 and Git/GitHub practice repository. At completion you can explain callable workflows, action inputs/outputs, composite metadata and version tags.
 
+![Reusable workflow call architecture](images/diagrams/reusable-workflow-architecture.svg)
+
+*The caller uses a workflow as a job; the called workflow owns its runner and steps.*
+
 ## Step 1 — Create the reusable workflow contract
 
 Copy [`reusable.yml`](.github/workflows/reusable.yml) and [`call-reusable.yml`](.github/workflows/call-reusable.yml) into your practice repository root `.github/workflows/`. The called workflow declares `workflow_call`, a required string input and a workflow output. The caller job uses the local workflow path and supplies `with.recipient`.
@@ -22,6 +26,10 @@ Copy [`reusable.yml`](.github/workflows/reusable.yml) and [`call-reusable.yml`](
 ![workflow_call caller and output flow](images/diagrams/step-workflow-call-code.svg)
 
 *Contract illustration follows the checked-in caller and reusable workflow.*
+
+![Reusable workflow input/output relationship](images/diagrams/inputs-outputs-dataflow.svg)
+
+*Inputs enter the called workflow; outputs return through step, job and workflow mappings.*
 
 The reusable workflow maps the step's `$GITHUB_OUTPUT` value to a job output, then to the callable workflow output. Caller jobs read returned values through `needs.call.outputs.message`.
 
@@ -36,6 +44,10 @@ The action lives in `actions/greeting/action.yml`; source path matters. Composit
     name: Actions learner
 - run: echo "${{ steps.greeting.outputs.greeting }}"
 ```
+
+![Custom action execution flow](images/diagrams/custom-action-execution.svg)
+
+*Inputs enter the local composite action; its declared output returns to the caller step.*
 
 ![Composite action metadata map](images/diagrams/step-composite-metadata.svg)
 

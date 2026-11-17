@@ -59,6 +59,14 @@ Open `app/__init__.py`, `app/db.py` and `app/routes.py` in your editor. `create_
 
 *This illustrates the actual CRUD route and SQLite flow. Tests use a temporary SQLite file per test fixture so app-context cleanup does not erase the database during a test.*
 
+![Application component relationships](images/diagrams/application-architecture.svg)
+
+*The API and tests each use the app factory; tests configure an isolated SQLite file.*
+
+![CRUD request sequence](images/diagrams/crud-sequence.svg)
+
+*Sequence uses the item created at the start; IDs are runtime values.*
+
 Endpoints: `POST /items` returns 201 and an object; `GET /items` returns a list; `PUT /items/<id>` updates or returns 404; `DELETE /items/<id>` returns 204 or 404. Invalid/missing names return 400.
 
 ## Step 4 — Run tests and lint locally
@@ -111,6 +119,10 @@ docker build -t crud-api:local .
 docker run --rm -p 5000:5000 crud-api:local
 ```
 
+![Dockerized Flask application layers](images/diagrams/docker-application-architecture.svg)
+
+*The container serves the same Flask routes on port 5000; this does not expose a public deployment.*
+
 The Dockerfile installs dependencies in a Python slim image, copies only `app/`, and runs Flask on container port 5000. `.dockerignore` excludes the Git folder, virtual environment, database, cache and `.env`. Open or request `http://localhost:5000/items`. The `--rm` option removes the container after Ctrl+C; remove image using `docker image rm crud-api:local`.
 
 ## Step 7 — Add and inspect CI
@@ -122,6 +134,10 @@ Copy `.github/workflows/ci-cd.yml` from this module to the same relative path in
 *Workflow path map: test and lint must pass before the Docker build step; image stays on that runner.*
 
 From the course checkout, `git add 05-crud-application-cicd` stages the module; in the learner's practice repository run `git add .`, commit and push. Open **Actions → CRUD CI → newest run → test job** and inspect pytest, Ruff and build steps. A green job means all three completed. Workflow examples are nested course files; GitHub only executes files copied into the practice repo's root `.github/workflows/`.
+
+![Pipeline success and failure paths](images/diagrams/pipeline-outcomes.svg)
+
+*This course workflow fails fast if tests or lint fail; only a passing validation reaches the Docker build.*
 
 ## Troubleshooting, security and practice
 

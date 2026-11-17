@@ -20,6 +20,10 @@ Beginners may need additional time. Need Lab 01, repository admin access, intern
 
 GitHub schedules work; the runner application maintains an outbound connection and receives matching jobs. Workflow steps execute on the host under the runner service account.
 
+![Hosted and self-hosted infrastructure comparison](images/diagrams/hosted-self-hosted-infrastructure.svg)
+
+*GitHub hosts and refreshes hosted runners; owners patch and isolate self-hosted machines.*
+
 ![Runner job assignment and host boundary](images/diagrams/control-plane-runner.svg)
 
 *Conceptual architecture; the VM is a security boundary you own and maintain.*
@@ -61,6 +65,10 @@ Stop the service using the OS-specific command printed in the GitHub setup instr
 ![Safe runner removal sequence](images/diagrams/step-runner-remove.svg)
 
 *Success means no runner entry remains and its service is stopped.*
+
+![Trusted workflow and untrusted pull request boundary](images/diagrams/trusted-untrusted-boundary.svg)
+
+*Do not run fork-supplied code on a privileged self-hosted host.*
 
 ## Security, exercises and further reading
 

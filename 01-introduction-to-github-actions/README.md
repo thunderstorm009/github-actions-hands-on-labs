@@ -18,26 +18,29 @@ Beginners may need longer, especially for Git setup.
 
 ## Objectives and concepts
 
-Recognize events (`push`, `pull_request`, manual `workflow_dispatch`), workflow files, YAML indentation, jobs, steps, runners, `runs-on`, expressions, contexts, environment variables, conditions, logs and exit codes. `ubuntu-latest` is a moving label whose hosted image changes over time; use a fixed label when reproducibility matters. GitHub-hosted runners are temporary remote machines, unlike your VS Code terminal. Self-hosted runners are machines you manage and secure (Lab 04).
+Recognize events (`push`, `pull_request`, manual `workflow_dispatch`), workflow files, YAML indentation, jobs, steps, runners, `runs-on`, expressions, contexts, environment variables, conditions, logs and exit codes. `ubuntu-latest` is a moving label whose hosted image changes over time; use a fixed label when reproducibility matters. GitHub-hosted runners are temporary remote machines, unlike your local terminal. Self-hosted runners are machines you manage and secure (Lab 04).
 
-```mermaid
-flowchart LR
-  A[Push to main / PR / manual] --> B[GitHub schedules job]
-  B --> C[Ubuntu hosted runner]
-  C --> D[checkout action]
-  D --> E[Shell steps]
-  E --> F[Logs and exit status in Actions tab]
-```
+![Event, workflow, runner, job and step architecture](images/diagrams/github-actions-architecture.svg)
+
+*The event starts the workflow; GitHub assigns its job to a runner, which executes the job steps.*
+
+![Hosted and self-hosted runner comparison](images/diagrams/runner-comparison.svg)
+
+*Conceptual comparison: GitHub manages hosted VM lifecycle; owners secure and maintain self-hosted machines.*
 
 ## Prerequisites
 
-Git, VS Code, GitHub account and internet. Follow [Start Here](../docs/START-HERE.md). On macOS/Linux use Terminal; on Windows use PowerShell or Git Bash. Create a *separate* practice repository named `github-actions-lab`; do not edit/push this course repo for exercises.
+Git, a GitHub account, internet and an editor with project/file and terminal support (VS Code is the illustrated option). Follow [Start Here](../docs/START-HERE.md). On macOS/Linux use Terminal; on Windows use PowerShell or Git Bash. Create a *separate* practice repository named `github-actions-lab`; do not edit/push this course repo for exercises.
+
+![Workflow lifecycle from event to result](images/diagrams/workflow-lifecycle.svg)
+
+*Lifecycle map: the next steps create, push and inspect this exact flow.*
 
 ## Implementation
 
 ### Step 01 — Create and clone a practice repository
 
-**Objective:** make a personal remote to receive your experiment. **Where:** GitHub website, then your computer terminal. Create an empty repository, then clone it. **Command:** `git clone https://github.com/YOUR-USERNAME/github-actions-lab.git` then `cd github-actions-lab`; **Working directory:** the parent folder for the clone. **Expected output:** `Cloning into 'github-actions-lab'...`; exact progress differs. Open the folder in VS Code (**File → Open Folder**), then **Terminal → New Terminal**. Run `git config --global user.name "Your Name"` and `git config --global user.email "you@example.com"`; these configure identity on your computer (choose the email you want on commits). `git config --get user.name` and `git config --get user.email` verify them. To avoid changing global config, run those commands without `--global` inside this practice repository. **Troubleshooting:** ensure the GitHub repository is empty and your account can authenticate. **Next:** create workflow path.
+**Objective:** make a personal remote to receive your experiment. **Where:** GitHub website, then your computer terminal. Create an empty repository, then clone it. **Command:** `git clone https://github.com/YOUR-USERNAME/github-actions-lab.git` then `cd github-actions-lab`; **Working directory:** the parent folder for the clone. **Expected output:** `Cloning into 'github-actions-lab'...`; exact progress differs. Open the folder in your editor (VS Code: **File → Open Folder**), then open its integrated terminal or a separate terminal at that folder. Other IDEs use equivalent open-project and terminal commands. Run `git config --global user.name "Your Name"` and `git config --global user.email "you@example.com"`; these configure identity on your computer (choose the email you want on commits). `git config --get user.name` and `git config --get user.email` verify them. To avoid changing global config, run those commands without `--global` inside this practice repository. **Troubleshooting:** ensure the GitHub repository is empty and your account can authenticate. **Next:** create workflow path.
 
 ![Annotated practice repository workflow path](images/diagrams/step-project-location.svg)
 
@@ -45,7 +48,7 @@ Git, VS Code, GitHub account and internet. Follow [Start Here](../docs/START-HER
 
 ### Step 02 — Create the workflow file
 
-**Objective:** put the sample under the required repository path. **Where:** VS Code Explorer; use New Folder twice to create `.github/workflows`, then New File. **File path:** `.github/workflows/basic-checkout.yml` relative to your *practice repository root*. **Content to paste:** copy the complete [`basic-checkout.yml`](.github/workflows/basic-checkout.yml) shown below. The hidden `.github` directory is normal; type the leading dot.
+**Objective:** put the sample under the required repository path. **Where:** your editor project/file explorer (VS Code in this walkthrough); use New Folder twice to create `.github/workflows`, then New File. Any editor that can create folders and text files works. **File path:** `.github/workflows/basic-checkout.yml` relative to your *practice repository root*. **Content to paste:** copy the complete [`basic-checkout.yml`](.github/workflows/basic-checkout.yml) shown below. The hidden `.github` directory is normal; type the leading dot.
 
 ```yaml
 name: Basic checkout
@@ -87,13 +90,17 @@ jobs:
 
 *Illustration: create `.github`, then `workflows`, then the YAML file in Explorer. This is not a VS Code screenshot.*
 
+![Step-by-step execution inside the job](images/diagrams/step-execution-flow.svg)
+
+*The runner checks out source before executing each shell step in order.*
+
 ![Annotated workflow YAML anatomy](images/diagrams/step-yaml-anatomy.svg)
 
 *Illustration: the labeled sections correspond to the complete YAML immediately above.*
 
 ### Step 03 — Commit and push
 
-**Where:** VS Code integrated terminal. **Working directory:** practice repository root (`pwd` or PowerShell `Get-Location`). Execute:
+**Where:** your IDE integrated terminal or a system terminal. **Working directory:** practice repository root (`pwd` or PowerShell `Get-Location`). Execute:
 
 ```sh
 git status
@@ -112,6 +119,8 @@ git push -u origin main
 
 **Where:** browser, your practice repo → **Actions** → **Basic checkout** → newest run → `Inspect the repository on Ubuntu` → individual step. A push to `main` creates a run; a pull request also creates a run. GitHub's runner runs the commands remotely. Success is a green check and each step marked completed. The file listing and OS/tool versions appear in their logs; timestamps and versions may vary because `ubuntu-latest` moves. **Verification:** use the Actions job graph and compare each step to the YAML. A missing workflow usually means wrong path, extension, branch or no push. Confirm Actions is enabled and that workflow is in the repository's default branch.
 
+**Genuine screenshot:** [course-checks-actions-run.png](images/screenshots/course-checks-actions-run.png) shows an actual successful GitHub Actions run for this course repository. It runs the CRUD tests, Ruff, SVG parsing and local-link checks; it is not a run of your `basic-checkout.yml`. The public summary is visible without sign-in; sign in to inspect step logs.
+
 ![GitHub Actions navigation illustration](images/diagrams/step-actions-inspection.svg)
 
 *Interface map only, not a captured GitHub page. Capture your real run using the checklist below.*
@@ -126,12 +135,12 @@ In the practice repo, temporarily change `node --version` to `node --version-inv
 
 ## Detailed outputs and screenshots
 
-**Example output** for the version step includes `Runner OS: Linux`, a kernel string, Node/Python/Git version lines and `Hello from the workflow`. These are illustrative and vary by runner image. In Actions, event name and commit SHA identify the trigger and code revision. `images/` includes a screenshot index with explicit placeholders: no real GitHub execution screenshot is supplied in this source checkout, so none is presented as evidence. Capture your own screenshots of Explorer, YAML, terminal, run graph, step logs and failure/success in your practice repository.
+**Example output** for the version step includes `Runner OS: Linux`, a kernel string, Node/Python/Git version lines and `Hello from the workflow`. These are illustrative and vary by runner image. In Actions, event name and commit SHA identify the trigger and code revision. The genuine course-check Actions summary is linked above; it validates the course repository checks and does not prove this lab workflow ran. Capture your own screenshots of Explorer, YAML, terminal, run graph, step logs and failure/success in your practice repository.
 
 
-## Visual coverage and screenshot capture
+## Visual coverage checklist and screenshot capture
 
-The illustrations above are diagrams of the implementation, not editor or execution screenshots. Follow the capture cards in [`images/screenshots/README.md`](images/screenshots/README.md) to save genuine VS Code, terminal, repository, Actions, success and failure captures beside this lab. The current public course repository screenshot is in `images/screenshots/`; it proves repository navigation only.
+The illustrations above are diagrams of the implementation, not editor or execution screenshots. Follow the capture cards in [`images/screenshots/README.md`](images/screenshots/README.md) to save genuine VS Code, terminal, repository, Actions, success and failure captures beside this lab. The two current public captures show the course repository page and a genuine course-check Actions run; they prove publication and repository checks only.
 
 | Step | Learning aid | What it explains |
 |---|---|---|
