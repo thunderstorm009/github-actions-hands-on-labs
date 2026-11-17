@@ -24,6 +24,8 @@ flowchart LR
  lint --> image[Build Docker image]
 ```
 
+<img width="1002" height="647" alt="image" src="https://github.com/user-attachments/assets/4b61d533-32ff-4c86-99cc-02344952be68" />
+
 ## Project and run locally
 
 Copy this module into a separate practice repository preserving its folders. From `05-crud-application-cicd` (the app folder), create an environment: macOS/Linux `python3 -m venv .venv && source .venv/bin/activate`; PowerShell `py -m venv .venv; .venv\\Scripts\\Activate.ps1`. Install with `python -m pip install -r requirements.txt`. Run `python -m pytest tests -q`, then `python -m ruff check app tests`. Expected illustrative output: `2 passed`; Ruff exits with no findings. Start `python -m app.run`; open `http://localhost:5000/items` (initially `[]`). Test with `curl -X POST http://localhost:5000/items -H 'Content-Type: application/json' -d '{"name":"Notebook"}'` (PowerShell use `Invoke-RestMethod -Method Post -Uri http://localhost:5000/items -ContentType 'application/json' -Body '{"name":"Notebook"}'`).
