@@ -15,7 +15,7 @@ This checklist distinguishes conceptual drawings and annotated output illustrati
 ## Actual capture provenance
 
 - `01-introduction-to-github-actions/images/screenshots/course-repository-page.png` is a real Chrome headless capture of the public repository page.
-- `01-introduction-to-github-actions/images/screenshots/course-checks-actions-run.png` is a real Chrome headless capture of the public run summary at [run 44066410242](https://github.com/thunderstorm009/github-actions-hands-on-labs/actions/runs/44066410242). GitHub's public page showed the successful job graph; the run's Jobs API independently showed each test, lint, SVG and link-validation step completed successfully. This validates the course repository, not any lab workflow in a learner's practice repository.
+- `01-introduction-to-github-actions/images/screenshots/course-checks-actions-run.png` is a real Chrome headless capture of the public run summary at [run 44068246516](https://github.com/thunderstorm009/github-actions-hands-on-labs/actions/runs/44068246516). GitHub's public page showed the successful job graph; the run's Jobs API independently showed each test, lint, SVG and link-validation step completed successfully. This validates the course repository, not any lab workflow in a learner's practice repository.
 - Lab 05's pytest and Ruff output illustration reflects commands actually run locally. It is explicitly not a screenshot and not GitHub execution evidence.
 
 All other screenshot cards state the target application/page/command, required visible signal and capture procedure. A missing genuine capture is labeled as unavailable rather than simulated.

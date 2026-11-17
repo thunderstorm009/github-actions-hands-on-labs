@@ -16,7 +16,7 @@ What, why, where, build and outcomes.
 Explain terms; add Mermaid diagram.
 
 ## Prerequisites and setup
-List versions and checks; VS Code and shell steps.
+List versions and checks; document an editor-neutral project/terminal path, with VS Code as an illustrated option.
 
 ## Task and project structure
 Show exact tree and working directory.

@@ -7,7 +7,7 @@ Learner-specific practice captures are intentionally absent until produced from 
 | Filename | Application and exact page/command | What must be visible |
 |---|---|---|
 | `course-repository-page.png` | Chrome, public course repository home | Real repo name, public badge and lab folders; proves repository publication only. |
-| `course-checks-actions-run.png` | Chrome, actual course Actions run summary | Shows green course-checks job for commit `38c0b61`; not a Lab 01 practice run. |
+| `course-checks-actions-run.png` | Chrome, actual course Actions run summary | Shows green course-checks job for commit `31c732c`; not a Lab 01 practice run. |
 | `01-ide-project.png` | Your IDE project/file explorer or editor | Practice project path and relevant source; no hidden credentials. |
 | `02-workflow-yaml.png` | Your IDE project/file explorer or editor | Practice project path and relevant source; no hidden credentials. |
 | `03-git-push-terminal.png` | Real local terminal at the stated lab directory | Command and unedited output; IDs and local usernames may be redacted. |
