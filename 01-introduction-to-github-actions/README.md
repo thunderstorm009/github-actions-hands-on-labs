@@ -38,6 +38,8 @@ Git, VS Code, GitHub account and internet. Follow [Start Here](../docs/START-HER
 ### Step 01 — Create and clone a practice repository
 
 **Objective:** make a personal remote to receive your experiment. **Where:** GitHub website, then your computer terminal. Create an empty repository, then clone it. **Command:** `git clone https://github.com/YOUR-USERNAME/github-actions-lab.git` then `cd github-actions-lab`; **Working directory:** the parent folder for the clone. **Expected output:** `Cloning into 'github-actions-lab'...`; exact progress differs. Open the folder in VS Code (**File → Open Folder**), then **Terminal → New Terminal**. Run `git config --global user.name "Your Name"` and `git config --global user.email "you@example.com"`; these configure identity on your computer (choose the email you want on commits). `git config --get user.name` and `git config --get user.email` verify them. To avoid changing global config, run those commands without `--global` inside this practice repository. **Troubleshooting:** ensure the GitHub repository is empty and your account can authenticate. **Next:** create workflow path.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0b5c7e3a-a79a-4c7d-afbe-c35b5dfb6f4f" />
+
 
 ### Step 02 — Create the workflow file
 
