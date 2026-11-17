@@ -93,6 +93,8 @@ git push -u origin main
 ```
 
 **Example output:** status lists the new file as untracked; commit reports one file changed; push reports `main -> main`. Names and commit IDs vary. If the branch is `master`, rename with `git branch -M main` before pushing. Git identity missing? rerun the config commands from Step 01. **Security:** never put credentials in workflow YAML or print environment variables wholesale.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/102bf1f3-7225-4d12-9523-0bfb09fc6528" />
+
 
 ### Step 04 — Inspect the run
 
