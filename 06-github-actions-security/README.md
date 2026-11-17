@@ -24,3 +24,40 @@ Security: never use production secrets for this exercise. `pull_request_target` 
 ## Screenshot index
 
 Use genuine, redacted screenshots for permissions, dummy secret presence check and environment approval settings. Never show the secret value.
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Secure Insecure Patterns
+
+![secure insecure patterns](images/diagrams/secure-insecure-patterns.svg)
+
+### Least Privilege Comparison
+
+![least privilege comparison](images/diagrams/least-privilege-comparison.svg)
+
+### Oidc Authentication
+
+![oidc authentication](images/diagrams/oidc-authentication.svg)
+
+### Secret Lifecycle
+
+![secret lifecycle](images/diagrams/secret-lifecycle.svg)
+
+### Token Permission Boundary
+
+![token permission boundary](images/diagrams/token-permission-boundary.svg)
+
+### Pull Request Security
+
+![pull request security](images/diagrams/pull-request-security.svg)
+
+### Trusted Untrusted Workflows
+
+![trusted untrusted workflows](images/diagrams/trusted-untrusted-workflows.svg)
+
+### Security Architecture
+
+![security architecture](images/diagrams/security-architecture.svg)
+

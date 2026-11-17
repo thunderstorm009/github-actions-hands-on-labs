@@ -41,3 +41,44 @@ Further reading: [Flask](https://flask.palletsprojects.com/), [pytest](https://d
 ## Screenshot index
 
 Capture VS Code app/tree, local API response, test output, Docker page and CI graph/log. No screenshot here asserts execution not performed in this authoring environment.
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Image Publishing Flow
+
+![image publishing flow](images/diagrams/image-publishing-flow.svg)
+
+### Api Request Response
+
+![api request response](images/diagrams/api-request-response.svg)
+
+### Complete Ci Pipeline
+
+![complete ci pipeline](images/diagrams/complete-ci-pipeline.svg)
+
+### Crud Sequence
+
+![crud sequence](images/diagrams/crud-sequence.svg)
+
+### Pipeline Outcomes
+
+![pipeline outcomes](images/diagrams/pipeline-outcomes.svg)
+
+### Client Api Database Flow
+
+![client api database flow](images/diagrams/client-api-database-flow.svg)
+
+### Application Architecture
+
+![application architecture](images/diagrams/application-architecture.svg)
+
+### Pytest Architecture
+
+![pytest architecture](images/diagrams/pytest-architecture.svg)
+
+### Docker Application Architecture
+
+![docker application architecture](images/diagrams/docker-application-architecture.svg)
+

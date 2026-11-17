@@ -42,3 +42,36 @@ Further reading: [self-hosted runners](https://docs.github.com/en/actions/how-to
 ## Screenshot index
 
 Capture Settings runner status, setup page with all tokens redacted, workflow run and deregistered runner list. Never save a token-containing screenshot. `images/README.md` is the capture plan.
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Job Assignment Sequence
+
+![job assignment sequence](images/diagrams/job-assignment-sequence.svg)
+
+### Runner Registration Lifecycle
+
+![runner registration lifecycle](images/diagrams/runner-registration-lifecycle.svg)
+
+### Runner Service Lifecycle
+
+![runner service lifecycle](images/diagrams/runner-service-lifecycle.svg)
+
+### Hosted Self Hosted Infrastructure
+
+![hosted self hosted infrastructure](images/diagrams/hosted-self-hosted-infrastructure.svg)
+
+### Runner Label Selection
+
+![runner label selection](images/diagrams/runner-label-selection.svg)
+
+### Control Plane Runner
+
+![control plane runner](images/diagrams/control-plane-runner.svg)
+
+### Trusted Untrusted Boundary
+
+![trusted untrusted boundary](images/diagrams/trusted-untrusted-boundary.svg)
+

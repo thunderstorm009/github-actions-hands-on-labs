@@ -41,6 +41,39 @@ Copy the files in this lab to your practice repository under `.github/workflows/
 
 **Expected output (illustrative):** report log prints `Created by prepare`; summary shows `Hello from prepare`; matrix logs print selected Python version and `matrix test passed`. Exact scheduling order varies. A green job graph indicates success. If artifact download fails, verify names and dependency; if `needs` output is empty, verify step `id`, output key and mapping.
 
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Job Dependency Graph
+
+![job dependency graph](images/diagrams/job-dependency-graph.svg)
+
+### Sequential Needs
+
+![sequential needs](images/diagrams/sequential-needs.svg)
+
+### Workflow Output Passing
+
+![workflow output passing](images/diagrams/workflow-output-passing.svg)
+
+### Matrix Strategy
+
+![matrix strategy](images/diagrams/matrix-strategy.svg)
+
+### Parallel Jobs
+
+![parallel jobs](images/diagrams/parallel-jobs.svg)
+
+### Multiple Job Architecture
+
+![multiple job architecture](images/diagrams/multiple-job-architecture.svg)
+
+### Artifact Lifecycle
+
+![artifact lifecycle](images/diagrams/artifact-lifecycle.svg)
+
 ## Exercises
 
 Guided: add a build job; pass a second output; upload a generated text report. Independent: add a concurrency group keyed by workflow/ref; make test run after build but lint run independently. Questions: why can't jobs share files directly? What does needs do? Difference between output and artifact? What expands matrix? When is `always()` useful? Debugging: mismatch artifact names then repair. Integration challenge: build→test→report plus independent lint and a three-version matrix. Hints/solutions: outputs use `$GITHUB_OUTPUT`; artifact names must match; concurrency uses `group: ${{ github.workflow }}-${{ github.ref }}` and `cancel-in-progress: true`.

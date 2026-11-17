@@ -24,3 +24,40 @@ Further reading: [reusable workflows](https://docs.github.com/en/actions/using-w
 ## Screenshot index
 
 Capture caller/callee job graph, input/output logs, composite action directory and release artifact page from a real practice run; no fabricated evidence is included.
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Custom Action Execution
+
+![custom action execution](images/diagrams/custom-action-execution.svg)
+
+### Release Automation Pipeline
+
+![release automation pipeline](images/diagrams/release-automation-pipeline.svg)
+
+### Reusable Cicd Architecture
+
+![reusable cicd architecture](images/diagrams/reusable-cicd-architecture.svg)
+
+### Versioning Tagging Lifecycle
+
+![versioning tagging lifecycle](images/diagrams/versioning-tagging-lifecycle.svg)
+
+### Caller Reusable Relationship
+
+![caller reusable relationship](images/diagrams/caller-reusable-relationship.svg)
+
+### Inputs Outputs Dataflow
+
+![inputs outputs dataflow](images/diagrams/inputs-outputs-dataflow.svg)
+
+### Reusable Workflow Architecture
+
+![reusable workflow architecture](images/diagrams/reusable-workflow-architecture.svg)
+
+### Composite Action Structure
+
+![composite action structure](images/diagrams/composite-action-structure.svg)
+

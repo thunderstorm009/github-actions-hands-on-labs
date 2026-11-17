@@ -104,6 +104,39 @@ In the practice repo, temporarily change `node --version` to `node --version-inv
 
 **Example output** for the version step includes `Runner OS: Linux`, a kernel string, Node/Python/Git version lines and `Hello from the workflow`. These are illustrative and vary by runner image. In Actions, event name and commit SHA identify the trigger and code revision. `images/` includes a screenshot index with explicit placeholders: no real GitHub execution screenshot is supplied in this source checkout, so none is presented as evidence. Capture your own screenshots of Explorer, YAML, terminal, run graph, step logs and failure/success in your practice repository.
 
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Github Actions Architecture
+
+![github actions architecture](images/diagrams/github-actions-architecture.svg)
+
+### Success Failure Flow
+
+![success failure flow](images/diagrams/success-failure-flow.svg)
+
+### Workflow Yaml Structure
+
+![workflow yaml structure](images/diagrams/workflow-yaml-structure.svg)
+
+### Workflow File Location
+
+![workflow file location](images/diagrams/workflow-file-location.svg)
+
+### Workflow Lifecycle
+
+![workflow lifecycle](images/diagrams/workflow-lifecycle.svg)
+
+### Runner Comparison
+
+![runner comparison](images/diagrams/runner-comparison.svg)
+
+### Step Execution Flow
+
+![step execution flow](images/diagrams/step-execution-flow.svg)
+
 ## Exercises
 
 **Guided:** (1) Add `date -u` on the runner. (2) Add `df -h` to display disk space. (3) Add `echo "Repo: ${{ github.repository }}"`. Hints: add a named step under `steps`; expressions use `${{ }}`. **Independent:** add a manual-only workflow step gated on `github.event_name`; show runner OS and repository name. **Concept questions:** What starts a workflow? Where does `run` execute? What does checkout do? Why can `ubuntu-latest` change? What indicates command failure? **Debugging:** intentionally misspell `runs-on`, inspect the annotation, restore it. **Integration challenge:** build a workflow triggered by push, PR and manual dispatch that prints repo, branch/ref and UTC date, with `contents: read`. **Solutions:** `date -u`, `df -h`, and `echo "Repo: ${{ github.repository }}"`; manual gate `if: github.event_name == 'workflow_dispatch'`. Do not print secrets or dump contexts wholesale.

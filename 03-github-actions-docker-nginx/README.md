@@ -32,6 +32,43 @@ The workflow builds `actions-nginx:ci` in GitHub's runner, starts a container an
 
 **Example output:** `docker build` ends with `Successfully tagged actions-nginx:ci` (builder wording can differ); curl prints HTML. If port 8080 is taken locally, change host port to 8081. If Docker daemon is unavailable, start Docker Desktop. Image layers can be cached by the daemon; Buildx and `cache` actions are useful in larger builds, but this basic smoke test avoids cache complexity. Image scanning is an important follow-on; don't treat a successful build as a security audit.
 
+
+## Visual guide
+
+These original diagrams explain the architecture and execution paths before you run the example. They are conceptual illustrations, not evidence that a workflow executed. Open [all diagrams and screenshot guidance](images/README.md).
+
+### Github Actions Docker Ci
+
+![github actions docker ci](images/diagrams/github-actions-docker-ci.svg)
+
+### Port Mapping
+
+![port mapping](images/diagrams/port-mapping.svg)
+
+### Runner Docker Engine
+
+![runner docker engine](images/diagrams/runner-docker-engine.svg)
+
+### Browser Nginx Request Flow
+
+![browser nginx request flow](images/diagrams/browser-nginx-request-flow.svg)
+
+### Docker Build Run Lifecycle
+
+![docker build run lifecycle](images/diagrams/docker-build-run-lifecycle.svg)
+
+### Container Networking
+
+![container networking](images/diagrams/container-networking.svg)
+
+### Docker Architecture
+
+![docker architecture](images/diagrams/docker-architecture.svg)
+
+### Ghcr Publishing Flow
+
+![ghcr publishing flow](images/diagrams/ghcr-publishing-flow.svg)
+
 ## Exercises, security and cleanup
 
 Guided: change page title; map port 8081; add an NGINX health-check request. Independent: build with a commit-derived tag; add a second page. Questions: image vs container? What does build context mean? Why port mapping? Why can't local browser reach runner container? What does cleanup do? Debugging: rename copied website folder then read build failure. Integration: CI builds, starts, checks unique page content and always cleans up. Hints: `docker build -t actions-nginx:$tag .`; `grep` or `curl | grep`. Do not put credentials in image layers or context; `.dockerignore` excludes repo metadata. Clean up container/image after local work.
